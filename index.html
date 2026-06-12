@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Enes Deva Centre</title>
-    <!-- Google Font & FontAwesome İkonları -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -16,13 +15,20 @@
         header { background: #fff; padding: 15px; text-align: center; font-size: 20px; font-weight: 700; border-bottom: 1px solid #eef2f3; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
         header span { color: #3498db; }
 
+        /* Ziyaretçi Sayacı Kutusu */
+        .visitor-counter-box { background: linear-gradient(135deg, #2c3e50, #3498db); color: #fff; margin: 15px; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2); }
+        .visitor-info { display: flex; align-items: center; gap: 10px; }
+        .visitor-info i { font-size: 20px; color: #2ecc71; }
+        .visitor-text { font-size: 12px; font-weight: 400; opacity: 0.9; }
+        .visitor-count { font-size: 18px; font-weight: 700; letter-spacing: 1px; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 6px; }
+
         /* Kategoriler */
-        .categories { display: flex; gap: 10px; padding: 15px; overflow-x: auto; scrollbar-width: none; }
+        .categories { display: flex; gap: 10px; padding: 0 15px 15px 15px; overflow-x: auto; scrollbar-width: none; }
         .categories::-webkit-scrollbar { display: none; }
         .cat-btn { background: #fff; padding: 8px 16px; border-radius: 20px; border: 1px solid #eef2f3; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; }
         .cat-btn.active { background: #3498db; color: #fff; border-color: #3498db; }
 
-        /* Ürün Listesi Grid Sistemi (Mobil Uyumlu) */
+        /* Ürün Listesi Grid Sistemi */
         .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px 15px 15px; }
         .product-card { background: #fff; border-radius: 12px; padding: 10px; border: 1px solid #eef2f3; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
         .product-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
@@ -77,12 +83,20 @@
 </head>
 <body>
 
-    <!-- Üst Bar -->
     <header>Enes Deva <span>Centre</span></header>
 
-    <!-- MÜŞTERİ ANA SAYFA PANELİ -->
     <div id="home-page" class="main-page active">
-        <!-- Dinamik Kategoriler -->
+        <div class="visitor-counter-box">
+            <div class="visitor-info">
+                <i class="fas fa-chart-line"></i>
+                <div class="visitor-text">
+                    <strong>Canlı Mağaza İstatistikleri</strong><br>
+                    Toplam Ziyaret Sayısı
+                </div>
+            </div>
+            <div class="visitor-count" id="live-counter">1,000,000</div>
+        </div>
+
         <div class="categories">
             <button class="cat-btn active" onclick="filterCategory('Tümü')">Tümü</button>
             <button class="cat-btn" onclick="filterCategory('Polo yaka t-shirt')">Polo Yaka T-Shirt</button>
@@ -90,11 +104,9 @@
             <button class="cat-btn" onclick="filterCategory('kozmetik')">Kozmetik</button>
             <button class="cat-btn" onclick="filterCategory('diğer')">Diğer</button>
         </div>
-        <!-- Ürünlerin Listeleneceği Yer -->
         <div class="products-grid" id="products-container"></div>
     </div>
 
-    <!-- SEPET PANELİ -->
     <div id="cart-panel" class="page-panel">
         <h3 style="margin-bottom: 15px;">Alışveriş Sepetim</h3>
         <div id="cart-container"></div>
@@ -104,7 +116,6 @@
             <span id="total-price-text">0.00 TL</span>
         </div>
         
-        <!-- Sipariş Formu -->
         <div id="checkout-form" style="display: none;">
             <h4 style="margin-bottom: 10px; color: #3498db;">Teslimat Bilgileri</h4>
             <div class="form-group"><label>Ad Soyad</label><input type="text" id="cust-name" class="form-control" placeholder="Adınız ve soyadınız"></div>
@@ -115,24 +126,25 @@
         <button id="btn-show-checkout" class="btn-submit" onclick="showCheckoutForm()">Ödeme Yap</button>
     </div>
 
-    <!-- FAVORİLER PANELİ -->
     <div id="favorites-panel" class="page-panel">
         <h3 style="margin-bottom: 15px;">Favori Ürünlerim</h3>
         <div class="products-grid" id="favorites-container"></div>
     </div>
 
-    <!-- SATICI PANELİ (#admin) -->
     <div id="admin-panel" class="page-panel">
         <div id="admin-login-area">
             <h3 style="margin-bottom: 15px;">Satıcı Girişi</h3>
-            <div class="form-group"><label>E-posta</label><input type="email" id="admin-email" class="form-control"></div>
-            <div class="form-group"><label>Şifre</label><input type="password" id="admin-pass" class="form-control"></div>
+            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="admin-username" class="form-control" placeholder="Örn: enesdeva"></div>
+            <div class="form-group"><label>Şifre</label><input type="password" id="admin-pass" class="form-control" placeholder="Şifreniz"></div>
             <button class="btn-submit" style="background:#3498db;" onclick="handleAdminLogin()">Giriş Yap</button>
             <button class="btn-submit" id="btn-admin-register" style="background:#2ecc71; margin-top: 5px;" onclick="handleAdminRegister()">Tek Seferlik Yönetici Kaydı Oluştur</button>
         </div>
 
         <div id="admin-content-area" style="display: none;">
-            <h3 id="admin-title" style="margin-bottom: 15px;">Yeni Ürün Ekle</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 id="admin-title">Yeni Ürün Ekle</h3>
+                <button onclick="handleAdminLogout()" style="background: #e74c3c; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;">Çıkış Yap</button>
+            </div>
             <input type="hidden" id="edit-product-id">
             <div class="form-group">
                 <label>Kategori Seçin</label>
@@ -163,18 +175,15 @@
         </div>
     </div>
 
-    <!-- Alt Gezinme Barı (Nav) -->
     <div class="bottom-nav">
         <div class="nav-item active" id="nav-home" onclick="switchPage('home')"><i class="fas fa-store"></i>Mağaza</div>
         <div class="nav-item" id="nav-favorites" onclick="switchPage('favorites')"><i class="fas fa-heart"></i>Favorilerim<span class="badge" id="fav-badge" style="display:none;">0</span></div>
         <div class="nav-item" id="nav-cart" onclick="switchPage('cart')"><i class="fas fa-shopping-basket"></i>Sepetim<span class="badge" id="cart-badge" style="display:none;">0</span></div>
     </div>
 
-    <!-- FIREBASE MOTORU VE SİTE LOJİĞİ -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Firebase Config Tanımlaması
         const firebaseConfig = {
@@ -188,12 +197,37 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const auth = getAuth(app);
 
         let allProducts = [];
         let currentCategory = 'Tümü';
         let cart = JSON.parse(localStorage.getItem('enes_deva_cart')) || [];
         let favorites = JSON.parse(localStorage.getItem('enes_deva_favs')) || [];
+        let isAdminLoggedIn = sessionStorage.getItem('enes_admin_session') === 'true';
+
+        // --- 1 MİLYON CANLI ZİYARETÇİ MOTORU ---
+        function initVisitorCounter() {
+            onSnapshot(collection(db, "analytics"), (snapshot) => {
+                let baseCount = 1000000; 
+                let dbCount = 0;
+                let docId = null;
+
+                snapshot.forEach(doc => {
+                    dbCount = doc.data().count || 0;
+                    docId = doc.id;
+                });
+
+                if (snapshot.empty) {
+                    addDoc(collection(db, "analytics"), { count: 1 });
+                } else if (!sessionStorage.getItem('counted_visit')) {
+                    sessionStorage.setItem('counted_visit', 'true');
+                    const docRef = doc(db, "analytics", docId);
+                    updateDoc(docRef, { count: dbCount + 1 });
+                }
+
+                const totalCounter = baseCount + dbCount;
+                document.getElementById('live-counter').innerText = totalCounter.toLocaleString('tr-TR');
+            });
+        }
 
         // --- SAYFA GÖSTERİM MOTORU ---
         function checkHash() {
@@ -203,7 +237,7 @@
 
             if (hash === '#admin') {
                 document.getElementById('admin-panel').classList.add('active');
-                checkAdminStatus();
+                checkAdminPanelState();
             } else if (hash === '#cart') {
                 document.getElementById('cart-panel').classList.add('active');
                 document.getElementById('nav-cart').classList.add('active');
@@ -224,47 +258,24 @@
             else window.location.hash = page;
         }
         window.addEventListener('hashchange', checkHash);
+        
         window.addEventListener('DOMContentLoaded', () => {
             checkHash();
             listenProducts();
             updateBadges();
+            initVisitorCounter();
         });
 
-        // --- TEK KİŞİLİK SATICI KİLİDİ ---
-        async function checkAdminStatus() {
-            const querySnapshot = await getDocs(collection(db, "admin_config"));
+        // --- YENİ KULLANICI ADLI SATICI SİSTEMİ ---
+        async function checkAdminPanelState() {
+            const querySnapshot = await getDocs(collection(db, "admin_user"));
             if (!querySnapshot.empty) {
                 document.getElementById('btn-admin-register').style.display = 'none';
+            } else {
+                document.getElementById('btn-admin-register').style.display = 'block';
             }
-        }
 
-        window.handleAdminRegister = async function() {
-            const email = document.getElementById('admin-email').value;
-            const pass = document.getElementById('admin-pass').value;
-            if(!email || !pass) return alert("Lütfen alanları doldurun!");
-
-            try {
-                const querySnapshot = await getDocs(collection(db, "admin_config"));
-                if (!querySnapshot.empty) return alert("Sistemde zaten kayıtlı bir satıcı var! İkinci bir kişi üye olamaz.");
-
-                await createUserWithEmailAndPassword(auth, email, pass);
-                await addDoc(collection(db, "admin_config"), { registeredEmail: email });
-                alert("Satıcı kaydı başarıyla oluşturuldu!");
-                checkAdminStatus();
-            } catch (err) { alert("Hata: " + err.message); }
-        }
-
-        window.handleAdminLogin = async function() {
-            const email = document.getElementById('admin-email').value;
-            const pass = document.getElementById('admin-pass').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-                alert("Giriş başarılı!");
-            } catch (err) { alert("Giriş başarısız: " + err.message); }
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
+            if (isAdminLoggedIn) {
                 document.getElementById('admin-login-area').style.display = 'none';
                 document.getElementById('admin-content-area').style.display = 'block';
                 renderAdminProducts();
@@ -272,9 +283,50 @@
                 document.getElementById('admin-login-area').style.display = 'block';
                 document.getElementById('admin-content-area').style.display = 'none';
             }
-        });
+        }
 
-        // --- ÜRÜN YÖNETİMİ & SIFIR ÜCRETLİ GÖRSEL MOTORU (BASE64) ---
+        window.handleAdminRegister = async function() {
+            const username = document.getElementById('admin-username').value.trim().toLowerCase();
+            const pass = document.getElementById('admin-pass').value;
+            if(!username || !pass) return alert("Lütfen kullanıcı adı ve şifre belirleyin!");
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "admin_user"));
+                if (!querySnapshot.empty) return alert("Sistemde zaten kayıtlı bir yönetici var!");
+
+                await addDoc(collection(db, "admin_user"), { username: username, password: pass });
+                alert("Yönetici kullanıcı hesabınız başarıyla oluşturuldu!");
+                checkAdminPanelState();
+            } catch (err) { alert("Hata: " + err.message); }
+        }
+
+        window.handleAdminLogin = async function() {
+            const username = document.getElementById('admin-username').value.trim().toLowerCase();
+            const pass = document.getElementById('admin-pass').value;
+
+            try {
+                const q = query(collection(db, "admin_user"), where("username", "==", username), where("password", "==", pass));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    isAdminLoggedIn = true;
+                    sessionStorage.setItem('enes_admin_session', 'true');
+                    alert("Giriş başarılı!");
+                    checkAdminPanelState();
+                } else {
+                    alert("Kullanıcı adı veya şifre hatalı!");
+                }
+            } catch (err) { alert("Giriş hatası: " + err.message); }
+        }
+
+        window.handleAdminLogout = function() {
+            isAdminLoggedIn = false;
+            sessionStorage.removeItem('enes_admin_session');
+            alert("Çıkış yapıldı.");
+            checkAdminPanelState();
+        }
+
+        // --- ÜRÜN YÖNETİM MOTORU (BASE64) ---
         function generateSeriNo() {
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
@@ -373,7 +425,7 @@
             document.getElementById('prod-image').value = "";
         }
 
-        // --- CANLI VERİ DİNLEME VE LİSTELEME ---
+        // --- VERİ LİSTELEME VE FİLTRELEME ---
         function listenProducts() {
             onSnapshot(collection(db, "products"), (snapshot) => {
                 allProducts = [];
@@ -382,7 +434,7 @@
                 });
                 renderProducts();
                 if(window.location.hash === '#favorites') renderFavorites();
-                if (auth.currentUser) renderAdminProducts();
+                if (isAdminLoggedIn) renderAdminProducts();
             });
         }
 
@@ -610,7 +662,6 @@
                 urunlerMetni += `* ${item.name} (Seri No: ${item.seriNo}) - Adet: ${item.qty}\n`;
             });
 
-            // Tam istediğin dinamik şablon yapısı
             const mesaj = `MERHABALAR ENES DEVA sitedeki\n${urunlerMetni}ürünler çok hoşuma gitti satın almak istiyorum.\n\nismim ve soyismim: ${name}\niletişim bilgilerim: ${phone}\naçık adresim: ${address}`;
             
             const encodedMesaj = encodeURIComponent(mesaj);
