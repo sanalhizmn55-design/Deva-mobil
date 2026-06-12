@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Enes Deva Centre</title>
+    <!-- Google Font & FontAwesome İkonları -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #f7f9fa; color: #2c3e50; padding-bottom: 70px; }
+        
+        /* Üst Bar (Header) */
+        header { background: #fff; padding: 15px; text-align: center; font-size: 20px; font-weight: 700; border-bottom: 1px solid #eef2f3; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
+        header span { color: #3498db; }
+
+        /* Kategoriler */
+        .categories { display: flex; gap: 10px; padding: 15px; overflow-x: auto; scrollbar-width: none; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-btn { background: #fff; padding: 8px 16px; border-radius: 20px; border: 1px solid #eef2f3; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; }
+        .cat-btn.active { background: #3498db; color: #fff; border-color: #3498db; }
+
+        /* Ürün Listesi Grid Sistemi (Mobil Uyumlu) */
+        .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 15px 15px 15px; }
+        .product-card { background: #fff; border-radius: 12px; padding: 10px; border: 1px solid #eef2f3; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+        .product-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; margin-bottom: 8px; }
+        .product-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 40px; }
+        .product-desc { font-size: 11px; color: #7f8c8d; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+        .product-serino { font-size: 10px; color: #bdc3c7; margin-bottom: 6px; font-weight: bold; }
+        .product-price { font-size: 15px; font-weight: 700; color: #2e7d32; margin-bottom: 8px; }
+        .add-to-cart-btn { background: #3498db; color: #fff; border: none; padding: 8px; border-radius: 8px; font-weight: 600; font-size: 12px; width: 100%; cursor: pointer; }
+        
+        /* Favori & Beğeni İkonları */
+        .card-actions { position: absolute; top: 15px; right: 15px; display: flex; flex-direction: column; gap: 8px; z-index: 10; }
+        .action-btn { background: rgba(255,255,255,0.9); border: none; width: 35px; height: 35px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .action-btn.fav { color: #e74c3c; }
+        .action-btn.like { color: #2ecc71; }
+        .count-text { font-size: 9px; font-weight: 700; text-align: center; margin-top: -2px; color: #333; }
+
+        /* Alt Gezinme Barı (Bottom Navigation) */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eef2f3; z-index: 200; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #7f8c8d; font-size: 11px; font-weight: 600; text-decoration: none; cursor: pointer; position: relative; width: 33.3%; }
+        .nav-item.active { color: #3498db; }
+        .nav-item i { font-size: 20px; margin-bottom: 2px; }
+        .badge { position: absolute; top: -5px; right: 25%; background: #e74c3c; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+
+        /* Modallar & Paneller */
+        .page-panel, .main-page { display: none; padding: 15px; }
+        .page-panel.active, .main-page.active { display: block; }
+        
+        /* Form Elemanları */
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #bdc3c7; font-size: 14px; outline: none; background: #fff; }
+        .btn-submit { background: #2ecc71; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; margin-top: 10px; text-align: center; }
+
+        /* Sepet Elemanları */
+        .cart-item { background: #fff; padding: 10px; border-radius: 8px; display: flex; gap: 10px; align-items: center; margin-bottom: 10px; border: 1px solid #eef2f3; }
+        .cart-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+        .cart-details { flex: 1; }
+        .cart-title { font-size: 13px; font-weight: 600; }
+        .cart-price { font-size: 14px; font-weight: 700; color: #2e7d32; }
+        .qty-control { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+        .qty-btn { background: #eef2f3; border: none; width: 26px; height: 26px; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 16px; }
+        .qty-text { font-size: 14px; font-weight: 600; width: 20px; text-align: center; }
+        .delete-cart-item { color: #e74c3c; cursor: pointer; margin-left: auto; font-size: 18px; padding: 5px; }
+
+        /* Admin Ürün Kartları */
+        .admin-product-item { background: #fff; padding: 10px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; border: 1px solid #eef2f3; }
+        .admin-actions { display: flex; gap: 10px; }
+        .admin-btn { border: none; padding: 6px 12px; border-radius: 6px; color: #fff; font-weight: 600; font-size: 12px; cursor: pointer; }
+        .btn-edit { background: #f39c12; }
+        .btn-delete { background: #e74c3c; }
+    </style>
+</head>
+<body>
+
+    <!-- Üst Bar -->
+    <header>Enes Deva <span>Centre</span></header>
+
+    <!-- MÜŞTERİ ANA SAYFA PANELİ -->
+    <div id="home-page" class="main-page active">
+        <!-- Dinamik Kategoriler -->
+        <div class="categories">
+            <button class="cat-btn active" onclick="filterCategory('Tümü')">Tümü</button>
+            <button class="cat-btn" onclick="filterCategory('Polo yaka t-shirt')">Polo Yaka T-Shirt</button>
+            <button class="cat-btn" onclick="filterCategory('takı aksesuar')">Takı Aksesuar</button>
+            <button class="cat-btn" onclick="filterCategory('kozmetik')">Kozmetik</button>
+            <button class="cat-btn" onclick="filterCategory('diğer')">Diğer</button>
+        </div>
+        <!-- Ürünlerin Listeleneceği Yer -->
+        <div class="products-grid" id="products-container"></div>
+    </div>
+
+    <!-- SEPET PANELİ -->
+    <div id="cart-panel" class="page-panel">
+        <h3 style="margin-bottom: 15px;">Alışveriş Sepetim</h3>
+        <div id="cart-container"></div>
+        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; margin-bottom: 15px;">
+            <span>Toplam Tutar:</span>
+            <span id="total-price-text">0.00 TL</span>
+        </div>
+        
+        <!-- Sipariş Formu -->
+        <div id="checkout-form" style="display: none;">
+            <h4 style="margin-bottom: 10px; color: #3498db;">Teslimat Bilgileri</h4>
+            <div class="form-group"><label>Ad Soyad</label><input type="text" id="cust-name" class="form-control" placeholder="Adınız ve soyadınız"></div>
+            <div class="form-group"><label>Cep Telefonu</label><input type="tel" id="cust-phone" class="form-control" placeholder="05xx xxx xx xx"></div>
+            <div class="form-group"><label>Açık Adres</label><textarea id="cust-address" class="form-control" rows="3" placeholder="Siparişinizin ulaştırılacağı açık adres"></textarea></div>
+            <button class="btn-submit" onclick="submitOrder()"><i class="fab fa-whatsapp"></i> Siparişi Tamamla (WhatsApp)</button>
+        </div>
+        <button id="btn-show-checkout" class="btn-submit" onclick="showCheckoutForm()">Ödeme Yap</button>
+    </div>
+
+    <!-- FAVORİLER PANELİ -->
+    <div id="favorites-panel" class="page-panel">
+        <h3 style="margin-bottom: 15px;">Favori Ürünlerim</h3>
+        <div class="products-grid" id="favorites-container"></div>
+    </div>
+
+    <!-- SATICI PANELİ (#admin) -->
+    <div id="admin-panel" class="page-panel">
+        <div id="admin-login-area">
+            <h3 style="margin-bottom: 15px;">Satıcı Girişi</h3>
+            <div class="form-group"><label>E-posta</label><input type="email" id="admin-email" class="form-control"></div>
+            <div class="form-group"><label>Şifre</label><input type="password" id="admin-pass" class="form-control"></div>
+            <button class="btn-submit" style="background:#3498db;" onclick="handleAdminLogin()">Giriş Yap</button>
+            <button class="btn-submit" id="btn-admin-register" style="background:#2ecc71; margin-top: 5px;" onclick="handleAdminRegister()">Tek Seferlik Yönetici Kaydı Oluştur</button>
+        </div>
+
+        <div id="admin-content-area" style="display: none;">
+            <h3 id="admin-title" style="margin-bottom: 15px;">Yeni Ürün Ekle</h3>
+            <input type="hidden" id="edit-product-id">
+            <div class="form-group">
+                <label>Kategori Seçin</label>
+                <select id="prod-category" class="form-control">
+                    <option value="Polo yaka t-shirt">Polo Yaka T-Shirt</option>
+                    <option value="takı aksesuar">Takı Aksesuar</option>
+                    <option value="kozmetik">Kozmetik</option>
+                    <option value="diğer">Diğer</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Ürün İsmi</label><input type="text" id="prod-name" class="form-control"></div>
+            <div class="form-group"><label>Fiyat (TL)</label><input type="number" id="prod-price" class="form-control"></div>
+            <div class="form-group"><label>Stok Durumu</label><input type="number" id="prod-stock" class="form-control" placeholder="Örn: 10"></div>
+            <div class="form-group"><label>Ürün Açıklaması</label><textarea id="prod-desc" class="form-control" rows="2"></textarea></div>
+            <div class="form-group"><label>Ürün Görseli</label><input type="file" id="prod-image" class="form-control" accept="image/*"></div>
+            
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;"><label>Başlangıç Beğeni</label><input type="number" id="prod-likes" class="form-control" value="0"></div>
+                <div class="form-group" style="flex: 1;"><label>Başlangıç Kaydetme</label><input type="number" id="prod-favs" class="form-control" value="0"></div>
+            </div>
+            
+            <button class="btn-submit" id="btn-save-product" onclick="saveProduct()">Ürünü Sisteme Ekle</button>
+            <button class="btn-submit" id="btn-cancel-edit" style="background:#95a5a6; display:none; margin-top:5px;" onclick="cancelProductEdit()">Düzenlemeyi İptal Et</button>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+            <h3 style="margin-bottom: 15px;">Mevcut Ürünleriniz</h3>
+            <div id="admin-products-list"></div>
+        </div>
+    </div>
+
+    <!-- Alt Gezinme Barı (Nav) -->
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-home" onclick="switchPage('home')"><i class="fas fa-store"></i>Mağaza</div>
+        <div class="nav-item" id="nav-favorites" onclick="switchPage('favorites')"><i class="fas fa-heart"></i>Favorilerim<span class="badge" id="fav-badge" style="display:none;">0</span></div>
+        <div class="nav-item" id="nav-cart" onclick="switchPage('cart')"><i class="fas fa-shopping-basket"></i>Sepetim<span class="badge" id="cart-badge" style="display:none;">0</span></div>
+    </div>
+
+    <!-- FIREBASE MOTORU VE SİTE LOJİĞİ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // Firebase Config Tanımlaması
+        const firebaseConfig = {
+          apiKey: "AIzaSyClUBF4f5rULpmi_N4lluGYq0oOt-vPEF4",
+          authDomain: "enes-deva-centre.firebaseapp.com",
+          projectId: "enes-deva-centre",
+          storageBucket: "enes-deva-centre.firebasestorage.app",
+          messagingSenderId: "714234705374",
+          appId: "1:714234705374:web:a06a5921605815ee9e594f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        let allProducts = [];
+        let currentCategory = 'Tümü';
+        let cart = JSON.parse(localStorage.getItem('enes_deva_cart')) || [];
+        let favorites = JSON.parse(localStorage.getItem('enes_deva_favs')) || [];
+
+        // --- SAYFA GÖSTERİM MOTORU ---
+        function checkHash() {
+            const hash = window.location.hash;
+            document.querySelectorAll('.page-panel, .main-page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            if (hash === '#admin') {
+                document.getElementById('admin-panel').classList.add('active');
+                checkAdminStatus();
+            } else if (hash === '#cart') {
+                document.getElementById('cart-panel').classList.add('active');
+                document.getElementById('nav-cart').classList.add('active');
+                renderCart();
+            } else if (hash === '#favorites') {
+                document.getElementById('favorites-panel').classList.add('active');
+                document.getElementById('nav-favorites').classList.add('active');
+                renderFavorites();
+            } else {
+                document.getElementById('home-page').classList.add('active');
+                document.getElementById('nav-home').classList.add('active');
+                renderProducts();
+            }
+        }
+
+        window.switchPage = function(page) {
+            if (page === 'home') window.location.hash = '';
+            else window.location.hash = page;
+        }
+        window.addEventListener('hashchange', checkHash);
+        window.addEventListener('DOMContentLoaded', () => {
+            checkHash();
+            listenProducts();
+            updateBadges();
+        });
+
+        // --- TEK KİŞİLİK SATICI KİLİDİ ---
+        async function checkAdminStatus() {
+            const querySnapshot = await getDocs(collection(db, "admin_config"));
+            if (!querySnapshot.empty) {
+                document.getElementById('btn-admin-register').style.display = 'none';
+            }
+        }
+
+        window.handleAdminRegister = async function() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            if(!email || !pass) return alert("Lütfen alanları doldurun!");
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "admin_config"));
+                if (!querySnapshot.empty) return alert("Sistemde zaten kayıtlı bir satıcı var! İkinci bir kişi üye olamaz.");
+
+                await createUserWithEmailAndPassword(auth, email, pass);
+                await addDoc(collection(db, "admin_config"), { registeredEmail: email });
+                alert("Satıcı kaydı başarıyla oluşturuldu!");
+                checkAdminStatus();
+            } catch (err) { alert("Hata: " + err.message); }
+        }
+
+        window.handleAdminLogin = async function() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                alert("Giriş başarılı!");
+            } catch (err) { alert("Giriş başarısız: " + err.message); }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('admin-login-area').style.display = 'none';
+                document.getElementById('admin-content-area').style.display = 'block';
+                renderAdminProducts();
+            } else {
+                document.getElementById('admin-login-area').style.display = 'block';
+                document.getElementById('admin-content-area').style.display = 'none';
+            }
+        });
+
+        // --- ÜRÜN YÖNETİMİ & SIFIR ÜCRETLİ GÖRSEL MOTORU (BASE64) ---
+        function generateSeriNo() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        window.saveProduct = async function() {
+            const id = document.getElementById('edit-product-id').value;
+            const category = document.getElementById('prod-category').value;
+            const name = document.getElementById('prod-name').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const stock = parseInt(document.getElementById('prod-stock').value);
+            const desc = document.getElementById('prod-desc').value;
+            const likes = parseInt(document.getElementById('prod-likes').value) || 0;
+            const favs = parseInt(document.getElementById('prod-favs').value) || 0;
+            const imageFile = document.getElementById('prod-image').files[0];
+
+            if(!name || !price || isNaN(price) || isNaN(stock)) return alert("Lütfen gerekli alanları doldurun!");
+
+            let imgUrl = "";
+            if (imageFile) {
+                imgUrl = await fileToBase64(imageFile);
+            } else if (id) {
+                const oldProd = allProducts.find(p => p.id === id);
+                imgUrl = oldProd ? oldProd.image : "";
+            }
+
+            if (id) {
+                const docRef = doc(db, "products", id);
+                let updateData = { category, name, price, stock, desc, likes, favs };
+                if (imageFile) updateData.image = imgUrl;
+                
+                await updateDoc(docRef, updateData);
+                alert("Ürün başarıyla güncellendi!");
+                cancelProductEdit();
+            } else {
+                const newProduct = {
+                    category, name, price, stock, desc, likes, favs,
+                    image: imgUrl,
+                    seriNo: generateSeriNo(),
+                    createdAt: Date.now()
+                };
+                await addDoc(collection(db, "products"), newProduct);
+                alert("Ürün başarıyla eklendi!");
+                clearAdminForm();
+            }
+        }
+
+        window.deleteProduct = async function(id) {
+            if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
+                await deleteDoc(doc(db, "products", id));
+                alert("Ürün silindi!");
+            }
+        }
+
+        window.editProduct = function(id) {
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            document.getElementById('edit-product-id').value = p.id;
+            document.getElementById('prod-category').value = p.category;
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-stock').value = p.stock;
+            document.getElementById('prod-desc').value = p.desc;
+            document.getElementById('prod-likes').value = p.likes;
+            document.getElementById('prod-favs').value = p.favs;
+            
+            document.getElementById('admin-title').innerText = "Ürünü Düzenle";
+            document.getElementById('btn-save-product').innerText = "Değişiklikleri Kaydet";
+            document.getElementById('btn-cancel-edit').style.display = "block";
+            window.scrollTo(0,0);
+        }
+
+        window.cancelProductEdit = function() {
+            clearAdminForm();
+            document.getElementById('admin-title').innerText = "Yeni Ürün Ekle";
+            document.getElementById('btn-save-product').innerText = "Ürünü Sisteme Ekle";
+            document.getElementById('btn-cancel-edit').style.display = "none";
+        }
+
+        function clearAdminForm() {
+            document.getElementById('edit-product-id').value = "";
+            document.getElementById('prod-name').value = "";
+            document.getElementById('prod-price').value = "";
+            document.getElementById('prod-stock').value = "";
+            document.getElementById('prod-desc').value = "";
+            document.getElementById('prod-likes').value = "0";
+            document.getElementById('prod-favs').value = "0";
+            document.getElementById('prod-image').value = "";
+        }
+
+        // --- CANLI VERİ DİNLEME VE LİSTELEME ---
+        function listenProducts() {
+            onSnapshot(collection(db, "products"), (snapshot) => {
+                allProducts = [];
+                snapshot.forEach(doc => {
+                    allProducts.push({ id: doc.id, ...doc.data() });
+                });
+                renderProducts();
+                if(window.location.hash === '#favorites') renderFavorites();
+                if (auth.currentUser) renderAdminProducts();
+            });
+        }
+
+        window.filterCategory = function(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if(btn.innerText.toLowerCase() === cat.toLowerCase() || (cat === 'Tümü' && btn.innerText === 'Tümü')) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            if(!container) return;
+            container.innerHTML = "";
+            
+            const filtered = currentCategory === 'Tümü' ? allProducts : allProducts.filter(p => p.category === currentCategory);
+            
+            if(filtered.length === 0) {
+                container.innerHTML = `<p style="grid-column: span 2; text-align:center; padding:20px; color:#7f8c8d;">Ürün bulunmuyor.</p>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const isFav = favorites.includes(p.id) ? 'fas' : 'far';
+                container.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.image || 'https://via.placeholder.com/150'}" class="product-img">
+                        <div class="card-actions">
+                            <button class="action-btn fav" onclick="toggleFavorite('${p.id}')"><i class="${isFav} fa-heart"></i><div class="count-text">${p.favs || 0}</div></button>
+                            <button class="action-btn like" onclick="handleLike('${p.id}')"><i class="fas fa-thumbs-up"></i><div class="count-text">${p.likes || 0}</div></button>
+                        </div>
+                        <div>
+                            <div class="product-title">${p.name}</div>
+                            <div class="product-desc">${p.desc || ''}</div>
+                            <div class="product-serino">Seri No: ${p.seriNo}</div>
+                            <div class="product-price">${p.price.toFixed(2)} TL</div>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('${p.id}')">Sepete Ekle</button>
+                    </div>
+                `;
+            });
+        }
+
+        function renderAdminProducts() {
+            const list = document.getElementById('admin-products-list');
+            if(!list) return;
+            list.innerHTML = "";
+            allProducts.forEach(p => {
+                list.innerHTML += `
+                    <div class="admin-product-item">
+                        <div>
+                            <strong>${p.name}</strong> (${p.price} TL) <br>
+                            <small style="color:#7f8c8d;">Seri No: ${p.seriNo} | Stok: ${p.stock}</small>
+                        </div>
+                        <div class="admin-actions">
+                            <button class="admin-btn btn-edit" onclick="editProduct('${p.id}')">Düzenle</button>
+                            <button class="admin-btn btn-delete" onclick="deleteProduct('${p.id}')">Sil</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // --- ETKİLEŞİMLER (BEĞENİ & FAVORİ) ---
+        window.handleLike = async function(id) {
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            const docRef = doc(db, "products", id);
+            await updateDoc(docRef, { likes: (p.likes || 0) + 1 });
+        }
+
+        window.toggleFavorite = async function(id) {
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            
+            const index = favorites.indexOf(id);
+            const docRef = doc(db, "products", id);
+
+            if(index === -1) {
+                favorites.push(id);
+                await updateDoc(docRef, { favs: (p.favs || 0) + 1 });
+            } else {
+                favorites.splice(index, 1);
+                await updateDoc(docRef, { favs: Math.max(0, (p.favs || 0) - 1) });
+            }
+            localStorage.setItem('enes_deva_favs', JSON.stringify(favorites));
+            updateBadges();
+            renderProducts();
+            if(window.location.hash === '#favorites') renderFavorites();
+        }
+
+        function renderFavorites() {
+            const container = document.getElementById('favorites-container');
+            if(!container) return;
+            container.innerHTML = "";
+            const favItems = allProducts.filter(p => favorites.includes(p.id));
+            
+            if(favItems.length === 0) {
+                container.innerHTML = `<p style="grid-column: span 2; text-align:center; padding:20px; color:#7f8c8d;">Favori ürününüz bulunmuyor.</p>`;
+                return;
+            }
+
+            favItems.forEach(p => {
+                container.innerHTML += `
+                    <div class="product-card">
+                        <img src="${p.image || 'https://via.placeholder.com/150'}" class="product-img">
+                        <div class="card-actions">
+                            <button class="action-btn fav" onclick="toggleFavorite('${p.id}')"><i class="fas fa-heart"></i><div class="count-text">${p.favs || 0}</div></button>
+                        </div>
+                        <div>
+                            <div class="product-title">${p.name}</div>
+                            <div class="product-price">${p.price.toFixed(2)} TL</div>
+                        </div>
+                        <button class="add-to-cart-btn" onclick="addToCart('${p.id}')">Sepete Ekle</button>
+                    </div>
+                `;
+            });
+        }
+
+        // --- DİNAMİK SEPET İŞLEMLERİ ---
+        window.addToCart = function(id) {
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            
+            const cartItem = cart.find(item => item.id === id);
+            if(cartItem) {
+                cartItem.qty += 1;
+            } else {
+                cart.push({ id: p.id, name: p.name, price: p.price, seriNo: p.seriNo, image: p.image, qty: 1 });
+            }
+            saveCart();
+            alert("Ürün sepete eklendi!");
+        }
+
+        window.changeQty = function(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if(!item) return;
+            item.qty += delta;
+            if(item.qty <= 0) {
+                cart = cart.filter(i => i.id !== id);
+            }
+            saveCart();
+            renderCart();
+        }
+
+        window.removeFromCart = function(id) {
+            cart = cart.filter(i => i.id !== id);
+            saveCart();
+            renderCart();
+        }
+
+        function saveCart() {
+            localStorage.setItem('enes_deva_cart', JSON.stringify(cart));
+            updateBadges();
+        }
+
+        function updateBadges() {
+            const cartCount = cart.reduce((total, item) => total + item.qty, 0);
+            const cartBadge = document.getElementById('cart-badge');
+            if(cartCount > 0) { cartBadge.innerText = cartCount; cartBadge.style.display = "block"; }
+            else { cartBadge.style.display = "none"; }
+
+            const favBadge = document.getElementById('fav-badge');
+            if(favorites.length > 0) { favBadge.innerText = favorites.length; favBadge.style.display = "block"; }
+            else { favBadge.style.display = "none"; }
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-container');
+            if(!container) return;
+            container.innerHTML = "";
+            let total = 0;
+
+            if(cart.length === 0) {
+                container.innerHTML = `<p style="text-align:center; padding:20px; color:#7f8c8d;">Sepetiniz boş.</p>`;
+                document.getElementById('total-price-text').innerText = "0.00 TL";
+                document.getElementById('btn-show-checkout').style.display = "none";
+                document.getElementById('checkout-form').style.display = "none";
+                return;
+            }
+
+            document.getElementById('btn-show-checkout').style.display = "block";
+
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                container.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${item.image || 'https://via.placeholder.com/150'}" class="cart-img">
+                        <div class="cart-details">
+                            <div class="cart-title">${item.name}</div>
+                            <div class="cart-price">${(item.price * item.qty).toFixed(2)} TL</div>
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="changeQty('${item.id}', -1)">-</button>
+                                <span class="qty-text">${item.qty}</span>
+                                <button class="qty-btn" onclick="changeQty('${item.id}', 1)">+</button>
+                            </div>
+                        </div>
+                        <i class="fas fa-trash-alt delete-cart-item" onclick="removeFromCart('${item.id}')"></i>
+                    </div>
+                `;
+            });
+            document.getElementById('total-price-text').innerText = total.toFixed(2) + " TL";
+        }
+
+        window.showCheckoutForm = function() {
+            document.getElementById('checkout-form').style.display = "block";
+            document.getElementById('btn-show-checkout').style.display = "none";
+        }
+
+        // --- WHATSAPP OTOMATİK SİPARİŞ ENTEGRASYONU ---
+        window.submitOrder = function() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('cust-address').value;
+
+            if(!name || !phone || !address) return alert("Lütfen alanları eksiksiz doldurun!");
+
+            let urunlerMetni = "";
+            cart.forEach((item) => {
+                urunlerMetni += `* ${item.name} (Seri No: ${item.seriNo}) - Adet: ${item.qty}\n`;
+            });
+
+            // Tam istediğin dinamik şablon yapısı
+            const mesaj = `MERHABALAR ENES DEVA sitedeki\n${urunlerMetni}ürünler çok hoşuma gitti satın almak istiyorum.\n\nismim ve soyismim: ${name}\niletişim bilgilerim: ${phone}\naçık adresim: ${address}`;
+            
+            const encodedMesaj = encodeURIComponent(mesaj);
+            const whatsappUrl = `https://wa.me/905518329861?text=${encodedMesaj}`;
+            
+            cart = [];
+            saveCart();
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+</body>
+</html>
