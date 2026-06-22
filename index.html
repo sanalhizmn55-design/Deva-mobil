@@ -46,7 +46,7 @@
         .action-btn.like { color: #2ecc71; }
         .count-text { font-size: 9px; font-weight: 700; text-align: center; margin-top: -2px; color: #333; }
 
-        /* --- TRENDYOL TARZI DETAY SAYFASI --- */
+        /* TRENDYOL TARZI DETAY SAYFASI */
         .product-detail-page { display: none; background: #fff; min-height: 100vh; position: relative; z-index: 150; }
         .product-detail-page.active { display: block; }
         .detail-header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eef2f3; padding: 15px; display: flex; align-items: center; gap: 15px; font-size: 18px; font-weight: 700; z-index: 160; }
@@ -63,10 +63,10 @@
         .detail-description-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #3498db; text-transform: uppercase; }
         .detail-description-text { font-size: 13px; color: #555; line-height: 1.6; white-space: pre-line; }
 
-        /* TAM EKRAN FOTOĞRAF MODALI (LIGHTBOX) */
+        /* LIGHTBOX MODAL */
         .lightbox-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; justify-content: center; align-items: center; }
         .lightbox-modal.active { display: flex; }
-        .lightbox-img { max-width: 95%; max-height: 85%; object-fit: contain; border-radius: 4px; box-shadow: 0 0 20px rgba(255,255,255,0.1); }
+        .lightbox-img { max-width: 95%; max-height: 85%; object-fit: contain; border-radius: 4px; }
         .lightbox-close { position: absolute; top: 20px; right: 25px; color: #fff; font-size: 35px; cursor: pointer; font-weight: bold; }
 
         /* Alt Gezinme Barı (Bottom Navigation) */
@@ -154,9 +154,7 @@
             </div>
             <div class="detail-price" id="detail-price">0.00 TL</div>
             
-            <div class="detail-actions" id="detail-action-buttons">
-                <!-- Dinamik etkileşim butonları buraya gelecek -->
-            </div>
+            <div class="detail-actions" id="detail-action-buttons"></div>
 
             <div class="detail-description-box">
                 <div class="detail-description-title">Ürün Açıklaması</div>
@@ -202,9 +200,8 @@
         <div class="products-grid" id="favorites-container"></div>
     </div>
 
-    <!-- SATICI PANELİ (#admin) -->
+    <!-- SATICI PANELİ -->
     <div id="admin-panel" class="page-panel">
-        <!-- E-POSTASIZ KULLANICI ADLI GİRİŞ ALANI -->
         <div id="admin-login-area">
             <h3 style="margin-bottom: 15px;">Satıcı Girişi</h3>
             <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="admin-username" class="form-control" placeholder="Örn: enesdeva"></div>
@@ -231,7 +228,7 @@
             <div class="form-group"><label>Ürün İsmi</label><input type="text" id="prod-name" class="form-control"></div>
             <div class="form-group"><label>Fiyat (TL)</label><input type="number" id="prod-price" class="form-control"></div>
             <div class="form-group"><label>Stok Durumu</label><input type="number" id="prod-stock" class="form-control" placeholder="Örn: 10"></div>
-            <div class="form-group"><label>Ürün Açıklaması</label><textarea id="prod-desc" class="form-control" rows="3" placeholder="Trendyol'daki gibi uzun açıklama yazabilirsiniz..."></textarea></div>
+            <div class="form-group"><label>Ürün Açıklaması</label><textarea id="prod-desc" class="form-control" rows="3" placeholder="Açıklama girin..."></textarea></div>
             <div class="form-group"><label>Ürün Görseli</label><input type="file" id="prod-image" class="form-control" accept="image/*"></div>
             
             <div style="display: flex; gap: 10px;">
@@ -255,7 +252,7 @@
         <div class="nav-item" id="nav-cart" onclick="switchPage('cart')"><i class="fas fa-shopping-basket"></i>Sepetim<span class="badge" id="cart-badge" style="display:none;">0</span></div>
     </div>
 
-    <!-- FIREBASE MOTORU VE DETAY SAYFASI MANTIĞI -->
+    <!-- FIREBASE MOTORU -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -278,7 +275,7 @@
         let favorites = JSON.parse(localStorage.getItem('enes_deva_favs')) || [];
         let isAdminLoggedIn = sessionStorage.getItem('enes_admin_session') === 'true';
 
-        // --- 1 MİLYON CANLI ZİYARETÇİ MOTORU ---
+        // --- CANLI ZİYARETÇİ MOTORU ---
         function initVisitorCounter() {
             onSnapshot(collection(db, "analytics"), (snapshot) => {
                 let baseCount = 1000000; 
@@ -303,11 +300,10 @@
             });
         }
 
-        // --- SAYFA GÖSTERİM MOTORU ---
+        // --- SAYFA SEÇİM VE LINK TAKİBİ ---
         function checkHash() {
             const hash = window.location.hash;
             
-            // Eğer detay hash'i varsa ana sayfayı gizle ama alt navigasyonu elleme
             if (hash.startsWith('#product-')) {
                 const prodId = hash.replace('#product-', '');
                 openProductDetailPage(prodId);
@@ -349,7 +345,7 @@
             initVisitorCounter();
         });
 
-        // --- TRENDYOL TARZI SİSTEME GİRİŞ / AYRINTI MOTORU ---
+        // --- DETAY SAYFASI GÖSTERİMİ ---
         window.openProductDetail = function(id) {
             window.location.hash = `product-${id}`;
         }
@@ -365,11 +361,10 @@
             document.getElementById('detail-page').classList.add('active');
             window.scrollTo(0,0);
 
-            // Verileri basıyoruz
             document.getElementById('detail-header-title').innerText = p.name;
             document.getElementById('detail-img').src = p.image || 'https://via.placeholder.com/400';
             document.getElementById('detail-title').innerText = p.name;
-            document.getElementById('detail-seri').innerText = `Seri No: ${p.seriNo} | Stok Durumu: ${p.stock || 0}`;
+            document.getElementById('detail-seri').innerText = `Seri No: ${p.seriNo} | Stok: ${p.stock || 0}`;
             document.getElementById('detail-price').innerText = p.price.toFixed(2) + " TL";
             document.getElementById('detail-description').innerText = p.desc && p.desc.trim() !== "" ? p.desc : "Bu ürün için herhangi bir açıklama girilmemiş.";
 
@@ -392,7 +387,7 @@
             }
         }
 
-        // --- TAM EKRAN LIGHTBOX MOTORU ---
+        // --- LIGHTBOX TAM EKRAN RESİM ---
         window.openLightbox = function() {
             const currentSrc = document.getElementById('detail-img').src;
             if(currentSrc) {
@@ -405,7 +400,7 @@
             document.getElementById('lightbox').classList.remove('active');
         }
 
-        // --- KULLANICI ADLI SATICI SİSTEMİ ---
+        // --- SATICI PANELİ GİRİŞ / KAYIT ---
         async function checkAdminPanelState() {
             const querySnapshot = await getDocs(collection(db, "admin_user"));
             if (!querySnapshot.empty) {
@@ -465,7 +460,7 @@
             checkAdminPanelState();
         }
 
-        // --- ÜRÜN YÖNETİM MOTORU (BASE64) ---
+        // --- YENİ ÜRÜN EKLEME / GÜNCELLEME (Hatalar Giderildi) ---
         function generateSeriNo() {
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
@@ -480,44 +475,50 @@
         }
 
         window.saveProduct = async function() {
-            const id = document.getElementById('edit-product-id').value;
-            const category = document.getElementById('prod-category').value;
-            const name = document.getElementById('prod-name').value;
-            const price = parseFloat(document.getElementById('prod-price').value);
-            const stock = parseInt(document.getElementById('prod-stock').value);
-            const desc = document.getElementById('prod-desc').value;
-            const likes = parseInt(document.getElementById('prod-likes').value) || 0;
-            const favs = parseInt(document.getElementById('prod-favs').value) || 0;
-            const imageFile = document.getElementById('prod-image').files[0];
+            try {
+                const id = document.getElementById('edit-product-id').value;
+                const category = document.getElementById('prod-category').value;
+                const name = document.getElementById('prod-name').value;
+                const price = parseFloat(document.getElementById('prod-price').value);
+                const stock = parseInt(document.getElementById('prod-stock').value);
+                const desc = document.getElementById('prod-desc').value;
+                const likes = parseInt(document.getElementById('prod-likes').value) || 0;
+                const favs = parseInt(document.getElementById('prod-favs').value) || 0;
+                const imageFile = document.getElementById('prod-image').files[0];
 
-            if(!name || !price || isNaN(price) || isNaN(stock)) return alert("Lütfen gerekli alanları doldurun!");
+                if(!name || isNaN(price) || isNaN(stock)) {
+                    return alert("Lütfen gerekli tüm alanları eksiksiz doldurun!");
+                }
 
-            let imgUrl = "";
-            if (imageFile) {
-                imgUrl = await fileToBase64(imageFile);
-            } else if (id) {
-                const oldProd = allProducts.find(p => p.id === id);
-                imgUrl = oldProd ? oldProd.image : "";
-            }
+                let imgUrl = "";
+                if (imageFile) {
+                    imgUrl = await fileToBase64(imageFile);
+                } else if (id) {
+                    const oldProd = allProducts.find(p => p.id === id);
+                    imgUrl = oldProd ? oldProd.image : "";
+                }
 
-            if (id) {
-                const docRef = doc(db, "products", id);
-                let updateData = { category, name, price, stock, desc, likes, favs };
-                if (imageFile) updateData.image = imgUrl;
-                
-                await updateDoc(docRef, updateData);
-                alert("Ürün başarıyla güncellendi!");
-                cancelProductEdit();
-            } else {
-                const newProduct = {
-                    category, name, price, stock, desc, likes, favs,
-                    image: imgUrl,
-                    seriNo: generateSeriNo(),
-                    createdAt: Date.now()
-                };
-                await addDoc(collection(db, "products"), newProduct);
-                alert("Ürün başarıyla eklendi!");
-                clearAdminForm();
+                if (id) {
+                    const docRef = doc(db, "products", id);
+                    let updateData = { category, name, price, stock, desc, likes, favs };
+                    if (imageFile) updateData.image = imgUrl;
+                    
+                    await updateDoc(docRef, updateData);
+                    alert("Ürün başarıyla güncellendi!");
+                    cancelProductEdit();
+                } else {
+                    const newProduct = {
+                        category, name, price, stock, desc, likes, favs,
+                        image: imgUrl,
+                        seriNo: generateSeriNo(),
+                        createdAt: Date.now()
+                    };
+                    await addDoc(collection(db, "products"), newProduct);
+                    alert("Ürün başarıyla eklendi!");
+                    clearAdminForm();
+                }
+            } catch(e) {
+                alert("Ürün kaydedilirken bir sorun oluştu: " + e.message);
             }
         }
 
@@ -536,9 +537,9 @@
             document.getElementById('prod-name').value = p.name;
             document.getElementById('prod-price').value = p.price;
             document.getElementById('prod-stock').value = p.stock;
-            document.getElementById('prod-desc').value = p.desc;
-            document.getElementById('prod-likes').value = p.likes;
-            document.getElementById('prod-favs').value = p.favs;
+            document.getElementById('prod-desc').value = p.desc || "";
+            document.getElementById('prod-likes').value = p.likes || 0;
+            document.getElementById('prod-favs').value = p.favs || 0;
             
             document.getElementById('admin-title').innerText = "Ürünü Düzenle";
             document.getElementById('btn-save-product').innerText = "Değişiklikleri Kaydet";
@@ -561,10 +562,10 @@
             document.getElementById('prod-desc').value = "";
             document.getElementById('prod-likes').value = "0";
             document.getElementById('prod-favs').value = "0";
-            document.getElementById('prod-image').value = "";
+            document.getElementById('prod-image').value = ""; // Dosya seçimi input alanı tamamen sıfırlanıyor
         }
 
-        // --- VERİ LİSTELEME VE FİLTRELEME ---
+        // --- VERİ DİNLEME VE ARAYÜZ LİSTELEME ---
         function listenProducts() {
             onSnapshot(collection(db, "products"), (snapshot) => {
                 allProducts = [];
@@ -572,13 +573,13 @@
                     allProducts.push({ id: doc.id, ...doc.data() });
                 });
                 
-                // Eğer şu an bir detay sayfası açıksa verileri canlı güncelle
                 if (window.location.hash.startsWith('#product-')) {
                     const activeId = window.location.hash.replace('#product-', '');
                     openProductDetailPage(activeId);
                 }
 
                 checkHash(); 
+                if(isAdminLoggedIn && window.location.hash === '#admin') renderAdminProducts();
             });
         }
 
@@ -609,15 +610,15 @@
             filtered.forEach(p => {
                 const isFav = favorites.includes(p.id) ? 'fas' : 'far';
                 container.innerHTML += `
-                    <div class="product-card" onclick="openProduct('%HASH%')">
-                        <div onclick="event.stopPropagation(); openProduct('${p.id}')">
+                    <div class="product-card" onclick="openProductDetail('${p.id}')">
+                        <div>
                             <img src="${p.image || 'https://via.placeholder.com/150'}" class="product-img">
                         </div>
                         <div class="card-actions">
                             <button class="action-btn fav" onclick="event.stopPropagation(); toggleFavorite('${p.id}')"><i class="${isFav} fa-heart"></i><div class="count-text">${p.favs || 0}</div></button>
                             <button class="action-btn like" onclick="event.stopPropagation(); handleLike('${p.id}')"><i class="fas fa-thumbs-up"></i><div class="count-text">${p.likes || 0}</div></button>
                         </div>
-                        <div onclick="openProduct('${p.id}')">
+                        <div>
                             <div class="product-title">${p.name}</div>
                             <div class="product-desc">${p.desc || ''}</div>
                             <div class="product-serino">Seri No: ${p.seriNo}</div>
@@ -627,10 +628,6 @@
                     </div>
                 `;
             });
-        }
-
-        window.openProduct = function(id) {
-            openProductDetail(id);
         }
 
         function renderAdminProducts() {
@@ -646,6 +643,7 @@
                         </div>
                         <div class="admin-actions">
                             <button class="admin-btn btn-edit" onclick="editProduct('${p.id}')">Düzenle</button>
+                            <button class="admin-btn btn-delete" onclick="editProduct('${p.id}')" style="display:none;"></button> <!-- Yedekleme temizliği -->
                             <button class="admin-btn btn-delete" onclick="deleteProduct('${p.id}')">Sil</button>
                         </div>
                     </div>
@@ -653,7 +651,7 @@
             });
         }
 
-        // --- ETKİLEŞİMLER (BEĞENİ & FAVORİ) ---
+        // --- BEĞENİ & FAVORİ İŞLEMLERİ ---
         window.handleLike = async function(id) {
             const p = allProducts.find(prod => prod.id === id);
             if(!p) return;
@@ -694,7 +692,7 @@
 
             favItems.forEach(p => {
                 container.innerHTML += `
-                    <div class="product-card" onclick="openProduct('${p.id}')">
+                    <div class="product-card" onclick="openProductDetail('${p.id}')">
                         <img src="${p.image || 'https://via.placeholder.com/150'}" class="product-img">
                         <div class="card-actions">
                             <button class="action-btn fav" onclick="event.stopPropagation(); toggleFavorite('${p.id}')"><i class="fas fa-heart"></i><div class="count-text">${p.favs || 0}</div></button>
@@ -709,7 +707,7 @@
             });
         }
 
-        // --- DİNAMİK SEPET İŞLEMLERİ ---
+        // --- SEPET İŞLEMLERİ ---
         window.addToCart = function(id) {
             const p = allProducts.find(prod => prod.id === id);
             if(!p) return;
@@ -779,7 +777,9 @@
                     <div class="cart-item">
                         <img src="${item.image || 'https://via.placeholder.com/150'}" class="cart-img">
                         <div class="cart-details">
-                            <div class="cart-title">${item.name}</div>
+                            <div class="cart-title">
+                                ${item.name}
+                            </div>
                             <div class="cart-price">${(item.price * item.qty).toFixed(2)} TL</div>
                             <div class="qty-control">
                                 <button class="qty-btn" onclick="changeQty('${item.id}', -1)">-</button>
