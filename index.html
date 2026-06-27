@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Enes Deva Centre</title>
+    <title>Aurea Premium</title>
     <!-- Google Font & FontAwesome İkonları -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -108,7 +108,7 @@
 <body>
 
     <!-- Üst Bar -->
-    <header id="main-header">Enes Deva <span>Centre</span></header>
+    <header id="main-header">Aurea <span>Premium</span></header>
 
     <!-- MÜŞTERİ ANA SAYFA PANELİ -->
     <div id="home-page" class="main-page active">
@@ -128,9 +128,6 @@
         <div class="categories">
             <button class="cat-btn active" onclick="filterCategory('Tümü')">Tümü</button>
             <button class="cat-btn" onclick="filterCategory('Polo yaka t-shirt')">Polo Yaka T-Shirt</button>
-            <button class="cat-btn" onclick="filterCategory('takı aksesuar')">Takı Aksesuar</button>
-            <button class="cat-btn" onclick="filterCategory('kozmetik')">Kozmetik</button>
-            <button class="cat-btn" onclick="filterCategory('diğer')">Diğer</button>
         </div>
         <!-- Ürünlerin Listeleneceği Yer -->
         <div class="products-grid" id="products-container"></div>
@@ -220,9 +217,6 @@
                 <label>Kategori Seçin</label>
                 <select id="prod-category" class="form-control">
                     <option value="Polo yaka t-shirt">Polo Yaka T-Shirt</option>
-                    <option value="takı aksesuar">Takı Aksesuar</option>
-                    <option value="kozmetik">Kozmetik</option>
-                    <option value="diğer">Diğer</option>
                 </select>
             </div>
             <div class="form-group"><label>Ürün İsmi</label><input type="text" id="prod-name" class="form-control"></div>
@@ -812,10 +806,10 @@
                 urunlerMetni += `* ${item.name} (Seri No: ${item.seriNo}) - Adet: ${item.qty}\n`;
             });
 
-            const mesaj = `MERHABALAR ENES DEVA sitedeki\n${urunlerMetni}ürünler çok hoşuma gitti satın almak istiyorum.\n\nismim ve soyismim: ${name}\niletişim bilgilerim: ${phone}\naçık adresim: ${address}`;
+            const mesaj = `MERHABALAR AUREA mağazadaki\n${urunlerMetni}ürünler çok hoşuma gitti satın almak istiyorum , ibanınızı benimle paylaşırmısınız.\n\nismim ve soyismim: ${name}\niletişim bilgilerim: ${phone}\naçık adresim: ${address}`;
             
             const encodedMesaj = encodeURIComponent(mesaj);
-            const whatsappUrl = `https://wa.me/905518329861?text=${encodedMesaj}`;
+            const whatsappUrl = `https://wa.me/905050619393?text=${encodedMesaj}`;
             
             cart = [];
             saveCart();
