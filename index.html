@@ -26,8 +26,7 @@
         .sponsor-like-btn { border: none; background: none; color: #e74c3c; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600; }
 
         /* Reklam Detay Popup */
-        .ad-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; padding: 20px; }
-        .ad-popup.active { display: flex; }
+        .ad-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
         .ad-popup-content { background: #fff; border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; }
         .ad-popup-close { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; color: #7f8c8d; }
 
@@ -61,7 +60,7 @@
         .action-btn.like { color: #2ecc71; }
         .count-text { font-size: 9px; font-weight: 700; text-align: center; margin-top: -2px; color: #333; }
 
-        /* DETAY SAYFASI */
+        /* TRENDYOL TARZI DETAY SAYFASI */
         .product-detail-page { display: none; background: #fff; min-height: 100vh; position: relative; z-index: 150; }
         .product-detail-page.active { display: block; }
         .detail-header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eef2f3; padding: 15px; display: flex; align-items: center; gap: 15px; font-size: 18px; font-weight: 700; z-index: 160; }
@@ -99,10 +98,25 @@
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; }
         .form-control { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #bdc3c7; font-size: 14px; outline: none; background: #fff; }
-        .btn-submit { background: #2ecc71; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; margin-top: 10px; text-align: center; }
+        .btn-submit { background: #2ecc71; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer; margin-top: 10px; text-align: center; display: block; }
+
+        /* Sepet Elemanları */
+        .cart-item { background: #fff; padding: 10px; border-radius: 8px; display: flex; gap: 10px; align-items: center; margin-bottom: 10px; border: 1px solid #eef2f3; }
+        .cart-img { width: 60px; height: 60px; object-fit: cover; border-radius: 6px; }
+        .cart-details { flex: 1; }
+        .cart-title { font-size: 13px; font-weight: 600; }
+        .cart-price { font-size: 14px; font-weight: 700; color: #2e7d32; margin-bottom: 8px; }
+        .qty-control { display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+        .qty-btn { background: #eef2f3; border: none; width: 26px; height: 26px; border-radius: 4px; font-weight: 700; cursor: pointer; font-size: 16px; }
+        .qty-text { font-size: 14px; font-weight: 600; width: 20px; text-align: center; }
+        .delete-cart-item { color: #e74c3c; cursor: pointer; margin-left: auto; font-size: 18px; padding: 5px; }
 
         /* Admin Ürün Kartları */
         .admin-product-item { background: #fff; padding: 10px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; border: 1px solid #eef2f3; }
+        .admin-actions { display: flex; gap: 10px; }
+        .admin-btn { border: none; padding: 6px 12px; border-radius: 6px; color: #fff; font-weight: 600; font-size: 12px; cursor: pointer; }
+        .btn-edit { background: #f39c12; }
+        .btn-delete { background: #e74c3c; }
     </style>
 </head>
 <body>
@@ -154,27 +168,76 @@
             <p id="pop-biz-desc" style="font-size: 13px; color: #555; background: #f9f9f9; padding: 10px; border-radius: 6px; margin-bottom: 12px; white-space: pre-line;"></p>
             <p style="font-size: 13px; margin-bottom: 6px;"><strong><i class="fas fa-map-marker-alt"></i> Adres:</strong> <span id="pop-biz-address" style="color: #555;"></span></p>
             <p style="font-size: 13px; margin-bottom: 15px;"><strong><i class="fas fa-phone"></i> İletişim:</strong> <span id="pop-biz-phone" style="color: #555;"></span></p>
-            <a id="pop-biz-call" href="#" class="btn-submit" style="background: #2ecc71; text-decoration: none; display: block;"><i class="fas fa-phone-alt"></i> Hemen Ara</a>
+            <a id="pop-biz-call" href="#" class="btn-submit" style="background: #2ecc71; text-decoration: none; color:#fff; font-weight:bold;"><i class="fas fa-phone-alt"></i> Hemen Ara</a>
         </div>
+    </div>
+
+    <div id="detail-page" class="product-detail-page">
+        <div class="detail-header">
+            <i class="fas fa-arrow-left" onclick="closeProductDetail()"></i>
+            <span id="detail-header-title">Ürün Detayı</span>
+        </div>
+        <div class="detail-img-container">
+            <img src="" id="detail-img" class="detail-main-img" onclick="openLightbox()">
+        </div>
+        <div class="detail-content">
+            <div class="detail-meta">
+                <div>
+                    <h2 class="detail-title" id="detail-title">Ürün Adı</h2>
+                    <div class="detail-seri" id="detail-seri">Seri No: ------</div>
+                </div>
+            </div>
+            <div class="detail-price" id="detail-price">0.00 TL</div>
+            
+            <div class="detail-actions" id="detail-action-buttons"></div>
+
+            <div class="detail-description-box">
+                <div class="detail-description-title">Ürün Açıklaması</div>
+                <div class="detail-description-text" id="detail-description">Bu ürün için herhangi bir açıklama girilmemiş.</div>
+            </div>
+
+            <button class="btn-submit" id="detail-add-to-cart" style="background: #3498db; font-size:16px; padding:15px; border:none; color:#fff; font-weight:bold; width:100%; border-radius:8px; cursor:pointer;">
+                <i class="fas fa-shopping-basket"></i> Sepete Ekle
+            </button>
+        </div>
+    </div>
+
+    <div id="lightbox" class="lightbox-modal" onclick="closeLightbox()">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img class="lightbox-img" id="lightbox-img">
     </div>
 
     <div id="cart-panel" class="page-panel">
         <h3 style="margin-bottom: 15px;">Alışveriş Sepetim</h3>
-        <div id="cart-container">Sepetiniz boş.</div>
+        <div id="cart-container"></div>
+        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #ddd;">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; margin-bottom: 15px;">
+            <span>Toplam Tutar:</span>
+            <span id="total-price-text">0.00 TL</span>
+        </div>
+        
+        <div id="checkout-form" style="display: none;">
+            <h4 style="margin-bottom: 10px; color: #3498db;">Teslimat Bilgileri</h4>
+            <div class="form-group"><label>Ad Soyad</label><input type="text" id="cust-name" class="form-control" placeholder="Adınız ve soyadınız"></div>
+            <div class="form-group"><label>Cep Telefonu</label><input type="tel" id="cust-phone" class="form-control" placeholder="05xx xxx xx xx"></div>
+            <div class="form-group"><label>Açık Adres</label><textarea id="cust-address" class="form-control" rows="3" placeholder="Siparişinizin ulaştırılacağı açık adres"></textarea></div>
+            <button class="btn-submit" onclick="submitOrder()" style="background:#2ecc71; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;"><i class="fab fa-whatsapp"></i> Siparişi Tamamla (WhatsApp)</button>
+        </div>
+        <button id="btn-show-checkout" class="btn-submit" style="background:#3498db; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="showCheckoutForm()">Ödeme Yap</button>
     </div>
 
     <div id="favorites-panel" class="page-panel">
         <h3 style="margin-bottom: 15px;">Favori Ürünlerim</h3>
-        <div class="products-grid" id="favorites-container">Henüz favori ürününüz yok.</div>
+        <div class="products-grid" id="favorites-container"></div>
     </div>
 
     <div id="admin-panel" class="page-panel">
         <div id="admin-login-area">
             <h3 style="margin-bottom: 15px;">Satıcı Girişi</h3>
-            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="admin-username" class="form-control" placeholder="Yönetici adı"></div>
+            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="admin-username" class="form-control" placeholder="Örn: enesdeva"></div>
             <div class="form-group"><label>Şifre</label><input type="password" id="admin-pass" class="form-control" placeholder="Şifreniz"></div>
-            <button class="btn-submit" style="background:#3498db;" onclick="handleAdminLogin()">Giriş Yap</button>
-            <button class="btn-submit" id="btn-admin-register" style="background:#2ecc71; margin-top: 5px;" onclick="handleAdminRegister()">Tek Seferlik Yönetici Kaydı Oluştur</button>
+            <button class="btn-submit" style="background:#3498db; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="handleAdminLogin()">Giriş Yap</button>
+            <button class="btn-submit" id="btn-admin-register" style="background:#2ecc71; margin-top: 5px; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="handleAdminRegister()">Tek Seferlik Yönetici Kaydı Oluştur</button>
         </div>
 
         <div id="admin-content-area" style="display: none;">
@@ -185,34 +248,56 @@
             </div>
 
             <div id="admin-product-sec">
-                <h3 style="margin-bottom:10px;">Yeni Ürün Ekle</h3>
+                <h3 id="admin-title" style="margin-bottom:10px;">Yeni Ürün Ekle</h3>
+                <input type="hidden" id="edit-product-id">
+                <div class="form-group">
+                    <label>Kategori Seçin</label>
+                    <select id="prod-category" class="form-control">
+                        <option value="Polo yaka t-shirt">Polo Yaka T-Shirt</option>
+                    </select>
+                </div>
                 <div class="form-group"><label>Ürün İsmi</label><input type="text" id="prod-name" class="form-control"></div>
                 <div class="form-group"><label>Fiyat (TL)</label><input type="number" id="prod-price" class="form-control"></div>
-                <button class="btn-submit" onclick="alert('Ürün ekleme simüle edildi.')">Ürünü Sisteme Ekle</button>
+                <div class="form-group"><label>Stok Durumu</label><input type="number" id="prod-stock" class="form-control" placeholder="Örn: 10"></div>
+                <div class="form-group"><label>Ürün Açıklaması</label><textarea id="prod-desc" class="form-control" rows="3" placeholder="Açıklama girin..."></textarea></div>
+                <div class="form-group"><label>Ürün Görseli</label><input type="file" id="prod-image" class="form-control" accept="image/*"></div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;"><label>Başlangıç Beğeni</label><input type="number" id="prod-likes" class="form-control" value="0"></div>
+                    <div class="form-group" style="flex: 1;"><label>Başlangıç Kaydetme</label><input type="number" id="prod-favs" class="form-control" value="0"></div>
+                </div>
+                
+                <button class="btn-submit" id="btn-save-product" style="background:#2ecc71; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="saveProduct()">Ürünü Sisteme Ekle</button>
+                <button class="btn-submit" id="btn-cancel-edit" style="background:#95a5a6; display:none; margin-top:5px; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="cancelProductEdit()">Düzenlemeyi İptal Et</button>
+                
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+                <h3 style="margin-bottom: 15px;">Mevcut Ürünleriniz</h3>
+                <div id="admin-products-list"></div>
             </div>
 
             <div id="admin-ad-sec" style="display:none;">
-                <h3 style="margin-bottom:10px;">Sponsorlu Reklam Ayarları</h3>
+                <h3 style="margin-bottom:10px;">Sponsorlu Reklam Alanı Ayarları</h3>
                 <div class="form-group"><label>İşletme İsmi</label><input type="text" id="ad-biz-name" class="form-control" placeholder="Örn: Salon Hidayet"></div>
                 <div class="form-group"><label>İşletme Adresi</label><input type="text" id="ad-biz-address" class="form-control" placeholder="Örn: Hatay Dörtyol"></div>
-                <div class="form-group"><label>Telefon Numarası</label><input type="tel" id="ad-biz-phone" class="form-control"></div>
-                <div class="form-group"><label>Reklam / İşletme Açıklaması</label><textarea id="ad-biz-desc" class="form-control" rows="3"></textarea></div>
+                <div class="form-group"><label>Telefon Numarası</label><input type="tel" id="ad-biz-phone" class="form-control" placeholder="Örn: 05xxxxxxxxx"></div>
+                <div class="form-group"><label>Reklam / İşletme Açıklaması</label><textarea id="ad-biz-desc" class="form-control" rows="3" placeholder="Reklam metni veya açıklama..."></textarea></div>
                 <div class="form-group"><label>Galeriden Video veya Görsel Yükle</label><input type="file" id="ad-media-file" class="form-control" accept="image/*,video/*"></div>
-                <button class="btn-submit" style="background:#2ecc71;" onclick="saveSponsorAd()">Sponsorlu Reklamı Siteye Ekle</button>
+                
+                <button class="btn-submit" style="background:#2ecc71; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="saveSponsorAd()">Sponsorlu Reklamı Siteye Ekle</button>
             </div>
         </div>
     </div>
 
     <div class="bottom-nav" id="bottom-navigation-bar">
         <div class="nav-item active" id="nav-home" onclick="switchPage('home')"><i class="fas fa-store"></i>Mağaza</div>
-        <div class="nav-item" id="nav-favorites" onclick="switchPage('favorites')"><i class="fas fa-heart"></i>Favoriler</div>
-        <div class="nav-item" id="nav-cart" onclick="switchPage('cart')"><i class="fas fa-shopping-basket"></i>Sepetim</div>
+        <div class="nav-item" id="nav-favorites" onclick="switchPage('favorites')"><i class="fas fa-heart"></i>Favorilerim<span class="badge" id="fav-badge" style="display:none;">0</span></div>
+        <div class="nav-item" id="nav-cart" onclick="switchPage('cart')"><i class="fas fa-shopping-basket"></i>Sepetim<span class="badge" id="cart-badge" style="display:none;">0</span></div>
         <div class="nav-item" id="nav-admin" onclick="switchPage('admin')"><i class="fas fa-user-shield"></i>Yönetici</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, doc, updateDoc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, onSnapshot, query, where, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
           apiKey: "AIzaSyClUBF4f5rULpmi_N4lluGYq0oOt-vPEF4",
@@ -225,35 +310,34 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+
+        let allProducts = [];
+        let currentCategory = 'Tümü';
+        let cart = JSON.parse(localStorage.getItem('enes_deva_cart')) || [];
+        let favorites = JSON.parse(localStorage.getItem('enes_deva_favs')) || [];
+        let selectedProductForDetail = null;
         let currentAdData = null;
 
-        // --- SAYFA DEĞİŞTİRME MOTORU (TÜM BOTONLARI AKTİF EDER) ---
+        // --- APPLİKASYON VE SAYFA YÖNETİM MOTORU ---
         window.switchPage = function(pageId) {
-            // Tüm sayfaları gizle
-            document.querySelectorAll('.main-page, .page-panel').forEach(page => {
-                page.classList.remove('active');
-            });
-            // Aktif alt menü tasarımlarını sıfırla
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            document.querySelectorAll('.main-page, .page-panel').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.getElementById('detail-page').classList.remove('active');
 
-            // İlgili sayfayı aç
             const targetPage = document.getElementById(`${pageId}-page`) || document.getElementById(`${pageId}-panel`);
             if (targetPage) targetPage.classList.add('active');
-
             const targetNav = document.getElementById(`nav-${pageId}`);
             if (targetNav) targetNav.classList.add('active');
         };
 
-        // --- ADMİN GİRİŞ SİSTEMİ ---
+        // --- ADMİN PANELİ KİMLİK DOĞRULAMA SİSTEMLERİ ---
         window.handleAdminRegister = function() {
             const user = document.getElementById('admin-username').value;
             const pass = document.getElementById('admin-pass').value;
-            if(!user || !pass) { alert("Lütfen kullanıcı adı ve şifre belirleyin!"); return; }
+            if(!user || !pass) { alert("Lütfen kullanıcı adı ve şifre girin!"); return; }
             localStorage.setItem('dev_adm_u', user);
             localStorage.setItem('dev_adm_p', pass);
-            alert("Yönetici kaydı bu tarayıcıya başarıyla yapıldı! Şimdi giriş yapabilirsiniz.");
+            alert("Yönetici kaydı bu tarayıcıya yapıldı! Giriş yapabilirsiniz.");
         };
 
         window.handleAdminLogin = function() {
@@ -266,6 +350,7 @@
                 document.getElementById('admin-login-area').style.display = "none";
                 document.getElementById('admin-content-area').style.display = "block";
                 sessionStorage.setItem('enes_admin_session', 'true');
+                renderAdminProducts();
             } else {
                 alert("Hatalı kullanıcı adı veya şifre!");
             }
@@ -295,7 +380,7 @@
             }
         };
 
-        // --- REKLAM GÖRSEL SIKIŞTIRMA ---
+        // --- GÖRSEL VEYA VİDEO SIKIŞTIRMA / BASE64 SİSTEMİ ---
         function mediaToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -320,7 +405,7 @@
             });
         }
 
-        // --- SPONSORLU REKLAM KAYDETME VE TAKİP MOTORU ---
+        // --- DINAMIK REKLAM YÖNETİM SİSTEMİ ---
         window.saveSponsorAd = async function() {
             const bizName = document.getElementById('ad-biz-name').value;
             const bizAddress = document.getElementById('ad-biz-address').value;
@@ -329,16 +414,19 @@
             const mediaFile = document.getElementById('ad-media-file').files[0];
 
             if (!bizName || !mediaFile) { alert("Lütfen İşletme Adı ve bir Görsel/Video seçin!"); return; }
-            alert("Reklam medyası yükleniyor, lütfen bekleyin...");
+            alert("Medya dosyası sıkıştırılıp yükleniyor, lütfen bekleyin...");
 
-            const mediaResult = await mediaToBase64(mediaFile);
-            const adObject = {
-                bizName: bizName, bizAddress: bizAddress, bizPhone: bizPhone, bizDesc: bizDesc,
-                mediaType: mediaResult.type, mediaData: mediaResult.data, views: 2457, likes: 0
-            };
-
-            await setDoc(doc(db, "sponsors", "active_ad"), adObject);
-            alert("Sponsorlu reklam başarıyla yayına alındı!");
+            try {
+                const mediaResult = await mediaToBase64(mediaFile);
+                const adObject = {
+                    bizName: bizName, bizAddress: bizAddress, bizPhone: bizPhone, bizDesc: bizDesc,
+                    mediaType: mediaResult.type, mediaData: mediaResult.data, views: 2457, likes: 0
+                };
+                await setDoc(doc(db, "sponsors", "active_ad"), adObject);
+                alert("Sponsorlu reklam başarıyla yayına alındı!");
+            } catch(e) {
+                alert("Hata: " + e.message);
+            }
         };
 
         function initSponsorAdMotor() {
@@ -351,10 +439,12 @@
                     document.getElementById('sponsor-likes-text').innerText = data.likes || 0;
 
                     const mediaRender = document.getElementById('sponsor-media-render');
-                    mediaRender.innerHTML = data.mediaType === 'video' 
-                        ? `<video src="${data.mediaData}" loop autoplay muted playsinline></video>`
-                        : `<img src="${data.mediaData}" alt="Sponsor">`;
+                    mediaRender.innerHTML = data.mediaType === 'video'
+                        ? `<video src="${data.mediaData}" loop autoplay muted playsinline style="width:100%; display:block; max-height:200px; object-fit:cover;"></video>`
+                        : `<img src="${data.mediaData}" alt="Sponsor" style="width:100%; display:block; max-height:200px; object-fit:cover;">`;
                     document.getElementById('sponsor-ad-container').style.display = 'block';
+                } else {
+                    document.getElementById('sponsor-ad-container').style.display = 'none';
                 }
             });
         }
@@ -369,15 +459,16 @@
             document.getElementById('pop-biz-address').innerText = currentAdData.bizAddress || "Adres belirtilmedi.";
             document.getElementById('pop-biz-phone').innerText = currentAdData.bizPhone || "Telefon belirtilmedi.";
             document.getElementById('pop-biz-call').href = `tel:${currentAdData.bizPhone}`;
-            document.getElementById('ad-detail-popup').classList.add('active');
+            document.getElementById('ad-detail-popup').style.display = 'flex';
         };
 
-        window.closeAdPopup = function() { document.getElementById('ad-detail-popup').classList.remove('active'); };
+        window.closeAdPopup = function() { document.getElementById('ad-detail-popup').style.display = 'none'; };
         window.likeSponsorAd = async function(e) {
             e.stopPropagation(); if (!currentAdData) return;
             await updateDoc(doc(db, "sponsors", "active_ad"), { likes: (currentAdData.likes || 0) + 1 });
         };
 
+        // --- ZİYARETÇİ SAYACI MOTORU ---
         function initVisitorCounter() {
             onSnapshot(collection(db, "analytics"), (snapshot) => {
                 let baseCount = 1000000; let dbCount = 0; let docId = null;
@@ -391,16 +482,373 @@
             });
         }
 
-        window.filterCategory = function(cat) { alert(cat + " kategorisi filtrelendi (Simüle)"); };
+        // --- ÜRÜN VERİTABANI VE LİSTELEME DÖNGÜLERİ ---
+        function listenProducts() {
+            onSnapshot(collection(db, "products"), (snapshot) => {
+                allProducts = [];
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    data.id = doc.id;
+                    allProducts.push(data);
+                });
+                renderProducts();
+                renderFavorites();
+                if(sessionStorage.getItem('enes_admin_session') === 'true') renderAdminProducts();
+            });
+        }
 
-        // Otomatik Giriş Kontrolü
+        window.filterCategory = function(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.trim() === cat || (cat === 'Tümü' && btn.innerText.trim() === 'Tümü'));
+            });
+            renderProducts();
+        };
+
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = "";
+            const filtered = currentCategory === 'Tümü' ? allProducts : allProducts.filter(p => p.category === currentCategory);
+
+            if(filtered.length === 0) { container.innerHTML = "<p style='grid-column:1/3; text-align:center; padding:20px; color:#95a5a6;'>Bu kategoride ürün yok.</p>"; return; }
+
+            filtered.forEach(p => {
+                const isFav = favorites.includes(p.id);
+                const card = document.createElement('div');
+                card.className = "product-card";
+                card.onclick = () => openProductDetail(p.id);
+                card.innerHTML = `
+                    <div class="card-actions">
+                        <button class="action-btn fav" onclick="toggleFavorite('${p.id}', event)"><i class="${isFav?'fas':'far'} fa-heart"></i><span class="count-text">${p.favorites || 0}</span></button>
+                        <button class="action-btn like" onclick="likeProduct('${p.id}', event)"><i class="far fa-thumbs-up"></i><span class="count-text">${p.likes || 0}</span></button>
+                    </div>
+                    <img src="${p.image || 'https://via.placeholder.com/150'}" class="product-img">
+                    <div class="product-title">${p.name}</div>
+                    <div class="product-desc">${p.description || ''}</div>
+                    <div class="product-serino">Seri No: ${p.seriNo || '------'}</div>
+                    <div class="product-price">${parseFloat(p.price).toFixed(2)} TL</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('${p.id}', event)">Sepete Ekle</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- TRENDYOL TARZI DETAY SAYFASI ---
+        window.openProductDetail = function(id) {
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            selectedProductForDetail = p;
+            
+            document.getElementById('home-page').classList.remove('active');
+            document.getElementById('favorites-panel').classList.remove('active');
+            document.getElementById('detail-page').classList.add('active');
+
+            document.getElementById('detail-header-title').innerText = p.name;
+            document.getElementById('detail-img').src = p.image || 'https://via.placeholder.com/400';
+            document.getElementById('detail-title').innerText = p.name;
+            document.getElementById('detail-seri').innerText = `Seri No: ${p.seriNo || '------'}`;
+            document.getElementById('detail-price').innerText = `${parseFloat(p.price).toFixed(2)} TL`;
+            document.getElementById('detail-description').innerText = p.description || "Bu ürün için herhangi bir açıklama girilmemiş.";
+
+            const actionBox = document.getElementById('detail-action-buttons');
+            const isFav = favorites.includes(p.id);
+            actionBox.innerHTML = `
+                <button class="action-btn fav" style="position:static; width:50px; height:50px;" onclick="toggleFavorite('${p.id}', event); openProductDetail('${p.id}');"><i class="${isFav?'fas':'far'} fa-heart" style="font-size:18px;"></i></button>
+                <button class="action-btn like" style="position:static; width:50px; height:50px;" onclick="likeProduct('${p.id}', event); openProductDetail('${p.id}');"><i class="far fa-thumbs-up" style="font-size:18px;"></i></button>
+            `;
+
+            document.getElementById('detail-add-to-cart').onclick = (e) => addToCart(p.id, e);
+        };
+
+        window.closeProductDetail = function() {
+            document.getElementById('detail-page').classList.remove('active');
+            window.switchPage('home');
+        };
+
+        // LIGHTBOX MOTORU
+        window.openLightbox = function() {
+            if(!selectedProductForDetail) return;
+            document.getElementById('lightbox-img').src = selectedProductForDetail.image || 'https://via.placeholder.com/400';
+            document.getElementById('lightbox').classList.add('active');
+        };
+        window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('active'); };
+
+        // --- BEĞENİ VE FAVORİ MOTORU ---
+        window.likeProduct = async function(id, e) {
+            e.stopPropagation();
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            await updateDoc(doc(db, "products", id), { likes: (p.likes || 0) + 1 });
+        };
+
+        window.toggleFavorite = async function(id, e) {
+            e.stopPropagation();
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            let currentFavs = p.favorites || 0;
+
+            if(favorites.includes(id)) {
+                favorites = favorites.filter(fId => fId !== id);
+                currentFavs = Math.max(0, currentFavs - 1);
+            } else {
+                favorites.push(id);
+                currentFavs += 1;
+            }
+            localStorage.setItem('enes_deva_favs', JSON.stringify(favorites));
+            await updateDoc(doc(db, "products", id), { favorites: currentFavs });
+            updateBadges();
+        };
+
+        function renderFavorites() {
+            const container = document.getElementById('favorites-container');
+            container.innerHTML = "";
+            const favItems = allProducts.filter(p => favorites.includes(p.id));
+
+            if(favItems.length === 0) { container.innerHTML = "<p style='grid-column:1/3; text-align:center; padding:20px; color:#95a5a6;'>Favori ürününüz yok.</p>"; return; }
+
+            favItems.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "product-card";
+                card.onclick = () => openProductDetail(p.id);
+                card.innerHTML = `
+                    <div class="card-actions"><button class="action-btn fav" onclick="toggleFavorite('${p.id}', event)"><i class="fas fa-heart"></i></button></div>
+                    <img src="${p.image || 'https://via.placeholder.com/150'}" class="product-img">
+                    <div class="product-title">${p.name}</div>
+                    <div class="product-price">${parseFloat(p.price).toFixed(2)} TL</div>
+                    <button class="add-to-cart-btn" onclick="addToCart('${p.id}', event)">Sepete Ekle</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // --- SEPET VE WHATSAPP SİPARİŞ SİSTEMİ ---
+        window.addToCart = function(id, e) {
+            if(e) e.stopPropagation();
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+
+            const existing = cart.find(item => item.id === id);
+            if(existing) { existing.qty += 1; } else { cart.push({ id: id, qty: 1 }); }
+            
+            localStorage.setItem('enes_deva_cart', JSON.stringify(cart));
+            updateBadges();
+            renderCart();
+            alert(`${p.name} sepete eklendi!`);
+        };
+
+        window.updateQty = function(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if(!item) return;
+            item.qty += delta;
+            if(item.qty <= 0) { cart = cart.filter(i => i.id !== id); }
+            localStorage.setItem('enes_deva_cart', JSON.stringify(cart));
+            updateBadges();
+            renderCart();
+        };
+
+        window.deleteCartItem = function(id) {
+            cart = cart.filter(i => i.id !== id);
+            localStorage.setItem('enes_deva_cart', JSON.stringify(cart));
+            updateBadges();
+            renderCart();
+        };
+
+        function renderCart() {
+            const container = document.getElementById('cart-container');
+            container.innerHTML = "";
+            let total = 0;
+
+            if(cart.length === 0) {
+                container.innerHTML = "<p style='text-align:center; padding:20px; color:#95a5a6;'>Sepetiniz boş.</p>";
+                document.getElementById('total-price-text').innerText = "0.00 TL";
+                document.getElementById('checkout-form').style.display = "none";
+                document.getElementById('btn-show-checkout').style.display = "none";
+                return;
+            }
+
+            document.getElementById('btn-show-checkout').style.display = "block";
+
+            cart.forEach(item => {
+                const p = allProducts.find(prod => prod.id === item.id);
+                if(!p) return;
+                const subtotal = p.price * item.qty;
+                total += subtotal;
+
+                const row = document.createElement('div');
+                row.className = "cart-item";
+                row.innerHTML = `
+                    <img src="${p.image || 'https://via.placeholder.com/60'}" class="cart-img">
+                    <div class="cart-details">
+                        <div class="cart-title">${p.name}</div>
+                        <div class="cart-price">${parseFloat(p.price).toFixed(2)} TL</div>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="updateQty('${p.id}', -1)">-</button>
+                            <span class="qty-text">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateQty('${p.id}', 1)">+</button>
+                        </div>
+                    </div>
+                    <i class="fas fa-trash-alt delete-cart-item" onclick="deleteCartItem('${p.id}')"></i>
+                `;
+                container.appendChild(row);
+            });
+
+            document.getElementById('total-price-text').innerText = `${total.toFixed(2)} TL`;
+        }
+
+        window.showCheckoutForm = function() {
+            document.getElementById('checkout-form').style.display = "block";
+            document.getElementById('btn-show-checkout').style.display = "none";
+        };
+
+        window.submitOrder = function() {
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('cust-address').value;
+
+            if(!name || !phone || !address) { alert("Lütfen teslimat bilgilerini eksiksiz doldurun!"); return; }
+
+            let message = `*Aurea Premium - Yeni Sipariş*\n\n`;
+            message += `*Müşteri Bilgileri:*\n👤 Ad Soyad: ${name}\n📞 Tel: ${phone}\n📍 Adres: ${address}\n\n`;
+            message += `*Sipariş Edilen Ürünler:*\n`;
+
+            let total = 0;
+            cart.forEach(item => {
+                const p = allProducts.find(prod => prod.id === item.id);
+                if(p) {
+                    message += `- ${p.name} (${item.qty} Adet) - Seri No: ${p.seriNo || '---'} - Fiyat: ${(p.price*item.qty).toFixed(2)} TL\n`;
+                    total += (p.price * item.qty);
+                }
+            });
+
+            message += `\n*Genel Toplam Tutar:* ${total.toFixed(2)} TL`;
+            
+            // Siparişi gönderdikten sonra sepeti temizle
+            cart = [];
+            localStorage.removeItem('enes_deva_cart');
+            updateBadges();
+            renderCart();
+            window.switchPage('home');
+
+            const whatsappUrl = `https://wa.me/905353198857?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        };
+
+        function updateBadges() {
+            const favBadge = document.getElementById('fav-badge');
+            favBadge.innerText = favorites.length;
+            favBadge.style.display = favorites.length > 0 ? "block" : "none";
+
+            const cartCount = cart.reduce((acc, obj) => acc + obj.qty, 0);
+            const cartBadge = document.getElementById('cart-badge');
+            cartBadge.innerText = cartCount;
+            cartBadge.style.display = cartCount > 0 ? "block" : "none";
+        }
+
+        // --- ADMİN ÜRÜN EKLEME / DÜZENLEME MOTORU ---
+        window.saveProduct = async function() {
+            const id = document.getElementById('edit-product-id').value;
+            const category = document.getElementById('prod-category').value;
+            const name = document.getElementById('prod-name').value;
+            const price = parseFloat(document.getElementById('prod-price').value);
+            const stock = parseInt(document.getElementById('prod-stock').value) || 0;
+            const desc = document.getElementById('prod-desc').value;
+            const fileInput = document.getElementById('prod-image');
+            const likes = parseInt(document.getElementById('prod-likes').value) || 0;
+            const favs = parseInt(document.getElementById('prod-favs').value) || 0;
+
+            if (!name || !price) { alert("Lütfen ürün adı ve fiyat girin!"); return; }
+
+            let imgBase64 = "";
+            if (fileInput.files.length > 0) {
+                const res = await mediaToBase64(fileInput.files[0]);
+                imgBase64 = res.data;
+            } else if (id) {
+                const existingProduct = allProducts.find(p => p.id === id);
+                if (existingProduct) imgBase64 = existingProduct.image;
+            }
+
+            const productData = {
+                category: category, name: name, price: price, stock: stock,
+                description: desc, image: imgBase64, likes: likes, favorites: favs
+            };
+
+            if (id) {
+                await updateDoc(doc(db, "products", id), productData);
+                alert("Ürün güncellendi!");
+            } else {
+                productData.seriNo = Math.floor(100000 + Math.random() * 900000).toString();
+                await addDoc(collection(db, "products"), productData);
+                alert("Ürün başarıyla eklendi!");
+            }
+            cancelProductEdit();
+        };
+
+        window.editProduct = function(id) {
+            const p = allProducts.find(prod => prod.id === id);
+            if(!p) return;
+            document.getElementById('edit-product-id').value = p.id;
+            document.getElementById('prod-category').value = p.category || "Polo yaka t-shirt";
+            document.getElementById('prod-name').value = p.name;
+            document.getElementById('prod-price').value = p.price;
+            document.getElementById('prod-stock').value = p.stock || 0;
+            document.getElementById('prod-desc').value = p.description || "";
+            document.getElementById('prod-likes').value = p.likes || 0;
+            document.getElementById('prod-favs').value = p.favorites || 0;
+            
+            document.getElementById('btn-save-product').innerText = "Ürünü Güncelle";
+            document.getElementById('btn-cancel-edit').style.display = "block";
+        };
+
+        window.deleteProduct = async function(id) {
+            if(confirm("Bu ürünü silmek istediğinize emin misiniz?")) {
+                await deleteDoc(doc(db, "products", id));
+                alert("Ürün silindi!");
+            }
+        };
+
+        window.cancelProductEdit = function() {
+            document.getElementById('edit-product-id').value = "";
+            document.getElementById('prod-name').value = "";
+            document.getElementById('prod-price').value = "";
+            document.getElementById('prod-stock').value = "";
+            document.getElementById('prod-desc').value = "";
+            document.getElementById('prod-image').value = "";
+            document.getElementById('prod-likes').value = "0";
+            document.getElementById('prod-favs').value = "0";
+            document.getElementById('btn-save-product').innerText = "Ürünü Sisteme Ekle";
+            document.getElementById('btn-cancel-edit').style.display = "none";
+        };
+
+        function renderAdminProducts() {
+            const container = document.getElementById('admin-products-list');
+            if(!container) return;
+            container.innerHTML = "";
+
+            allProducts.forEach(p => {
+                const row = document.createElement('div');
+                row.className = "admin-product-item";
+                row.innerHTML = `
+                    <div style="font-size:13px; font-weight:600;">${p.name} (${parseFloat(p.price).toFixed(2)} TL)</div>
+                    <div class="admin-actions">
+                        <button class="admin-btn btn-edit" onclick="editProduct('${p.id}')">Düzenle</button>
+                        <button class="admin-btn btn-delete" onclick="deleteProduct('${p.id}')">Sil</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // --- SISTEMI BAŞLAT ---
         if(sessionStorage.getItem('enes_admin_session') === 'true') {
             document.getElementById('admin-login-area').style.display = "none";
             document.getElementById('admin-content-area').style.display = "block";
         }
 
+        updateBadges();
+        renderCart();
         initVisitorCounter();
         initSponsorAdMotor();
+        listenProducts();
     </script>
 </body>
 </html>
