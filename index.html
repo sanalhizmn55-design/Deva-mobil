@@ -26,11 +26,6 @@
         .sponsor-stats { display: flex; gap: 15px; color: #7f8c8d; font-size: 12px; }
         .sponsor-like-btn { border: none; background: none; color: #e74c3c; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 600; }
 
-        /* Reklam Detay Popup */
-        .ad-popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; padding: 20px; }
-        .ad-popup-content { background: #fff; border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); position: relative; }
-        .ad-popup-close { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; color: #7f8c8d; }
-
         /* Ziyaretçi Sayacı Kutusu */
         .visitor-counter-box { background: linear-gradient(135deg, #2c3e50, #3498db); color: #fff; margin: 15px; padding: 12px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2); }
         .visitor-info { display: flex; align-items: center; gap: 10px; }
@@ -61,13 +56,13 @@
         .action-btn.like { color: #2ecc71; }
         .count-text { font-size: 9px; font-weight: 700; text-align: center; margin-top: -2px; color: #333; }
 
-        /* TRENDYOL TARZI DETAY SAYFASI */
-        .product-detail-page { display: none; background: #fff; min-height: 100vh; position: relative; z-index: 150; }
-        .product-detail-page.active { display: block; }
-        .detail-header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eef2f3; padding: 15px; display: flex; align-items: center; gap: 15px; font-size: 18px; font-weight: 700; z-index: 160; }
+        /* TRENDYOL TARZI DETAY SAYFALARI (ÜRÜN VE REKLAM) */
+        .product-detail-page, .ad-detail-page { display: none; background: #fff; min-height: 100vh; position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow-y: auto; z-index: 150; padding-bottom: 40px; }
+        .product-detail-page.active, .ad-detail-page.active { display: block; }
+        .detail-header { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eef2f3; padding: 15px; display: flex; align-items: center; gap: 15px; font-size: 18px; font-weight: 700; z-index: 160; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
         .detail-header i { cursor: pointer; font-size: 20px; color: #333; }
         .detail-img-container { width: 100%; max-height: 400px; overflow: hidden; background: #f7f9fa; display: flex; align-items: center; justify-content: center; position: relative; }
-        .detail-main-img { width: 100%; max-height: 400px; object-fit: contain; cursor: zoom-in; }
+        .detail-main-img, .detail-main-video { width: 100%; max-height: 400px; object-fit: contain; }
         .detail-content { padding: 20px; }
         .detail-meta { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .detail-title { font-size: 20px; font-weight: 700; color: #2c3e50; margin-bottom: 5px; }
@@ -167,20 +162,33 @@
         <div class="products-grid" id="products-container"></div>
     </div>
 
-    <!-- REKLAM DETAY POPUP MODALI -->
-    <div id="ad-detail-popup" class="ad-popup">
-        <div class="ad-popup-content">
-            <span class="ad-popup-close" onclick="closeAdPopup()">&times;</span>
-            <h3 id="pop-biz-name" style="color: #3498db; margin-bottom: 12px;">İşletme Adı</h3>
-            <p style="font-size: 13px; margin-bottom: 8px;"><strong><i class="fas fa-align-left"></i> Açıklama:</strong></p>
-            <p id="pop-biz-desc" style="font-size: 13px; color: #555; background: #f9f9f9; padding: 10px; border-radius: 6px; margin-bottom: 12px; white-space: pre-line;"></p>
-            <p style="font-size: 13px; margin-bottom: 6px;"><strong><i class="fas fa-map-marker-alt"></i> Adres:</strong> <span id="pop-biz-address" style="color: #555;"></span></p>
-            <p style="font-size: 13px; margin-bottom: 15px;"><strong><i class="fas fa-phone"></i> İletişim:</strong> <span id="pop-biz-phone" style="color: #555;"></span></p>
-            <a id="pop-biz-call" href="#" class="btn-submit" style="background: #2ecc71; text-decoration: none; color:#fff; font-weight:bold;"><i class="fas fa-phone-alt"></i> Hemen Ara</a>
+    <!-- TRENDYOL TARZI REKLAM DETAY SAYFASI PANELİ (YENİ SEYFA YAPISI) -->
+    <div id="ad-detail-page" class="ad-detail-page">
+        <div class="detail-header">
+            <i class="fas fa-arrow-left" onclick="closeAdDetailPage()"></i>
+            <span id="ad-detail-header-title">Sponsorlu Reklam</span>
+        </div>
+        <div class="detail-img-container" id="ad-detail-media-container">
+            <!-- Dinamik video veya resim gelecek -->
+        </div>
+        <div class="detail-content">
+            <h2 class="detail-title" id="ad-detail-biz-name" style="color: #3498db; margin-bottom: 15px;">İşletme Adı</h2>
+            
+            <div class="detail-description-box">
+                <div class="detail-description-title">Reklam Detayı & Açıklama</div>
+                <div class="detail-description-text" id="ad-detail-biz-desc">Açıklama yükleniyor...</div>
+            </div>
+
+            <div style="background: #fdfdfd; border: 1px solid #eef2f3; padding: 15px; border-radius: 8px; margin-bottom: 25px; font-size: 13px;">
+                <p style="margin-bottom: 8px;"><strong><i class="fas fa-map-marker-alt" style="color:#e74c3c;"></i> Adres:</strong> <span id="ad-detail-biz-address"></span></p>
+                <p><strong><i class="fas fa-phone" style="color:#2ecc71;"></i> İletişim:</strong> <span id="ad-detail-biz-phone"></span></p>
+            </div>
+
+            <a id="ad-detail-biz-call" href="#" class="btn-submit" style="background: #2ecc71; text-decoration: none; color:#fff; font-weight:bold; padding: 15px; font-size: 16px;"><i class="fas fa-phone-alt"></i> Hemen İletişime Geç / Ara</a>
         </div>
     </div>
 
-    <!-- TRENDYOL TARZI DETAY SAYFASI PANELİ -->
+    <!-- TRENDYOL TARZI ÜRÜN DETAY SAYFASI PANELİ -->
     <div id="detail-page" class="product-detail-page">
         <div class="detail-header">
             <i class="fas fa-arrow-left" onclick="closeProductDetail()"></i>
@@ -257,7 +265,7 @@
             <!-- SEKMELİ YAPI -->
             <div style="display:flex; gap:10px; margin-bottom:15px; border-bottom:2px solid #eef2f3; padding-bottom:10px;">
                 <button onclick="switchAdminTab('product')" id="tab-btn-product" style="flex:1; padding:8px; border:none; background:#3498db; color:#fff; border-radius:6px; font-weight:bold; cursor:pointer;">Ürün Yönetimi</button>
-                <button onclick="switchAdminTab('ad')" id="tab-btn-ad" style="flex:1; padding:8px; border:none; background:#eef2f3; color:#333; border-radius:6px; font-weight:bold; cursor:pointer;">Sponsorluk Ekle</button>
+                <button onclick="switchAdminTab('ad')" id="tab-btn-ad" style="flex:1; padding:8px; border:none; background:#eef2f3; color:#333; border-radius:6px; font-weight:bold; cursor:pointer;">Sponsorluk Ayarları</button>
                 <button onclick="handleAdminLogout()" style="background: #e74c3c; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;">Çıkış</button>
             </div>
 
@@ -290,16 +298,22 @@
                 <div id="admin-products-list"></div>
             </div>
 
-            <!-- REKLAM EKLEME BÖLÜMÜ -->
+            <!-- REKLAM EKLEME VE DÜZENLEME BÖLÜMÜ -->
             <div id="admin-ad-sec" style="display:none;">
-                <h3 style="margin-bottom:10px;">Sponsorlu Reklam Alanı Ayarları</h3>
+                <h3 style="margin-bottom:10px;">Sponsorlu Reklam Ayarları</h3>
+                
+                <div style="background: #f9f9f9; padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed #3498db; text-align: center;">
+                    <button class="admin-btn btn-edit" style="padding: 8px 15px;" onclick="loadCurrentAdToForm()">Aktif Reklamı Formu Çek (Düzenle)</button>
+                </div>
+
                 <div class="form-group"><label>İşletme İsmi</label><input type="text" id="ad-biz-name" class="form-control" placeholder="Örn: Salon Hidayet"></div>
                 <div class="form-group"><label>İşletme Adresi</label><input type="text" id="ad-biz-address" class="form-control" placeholder="Örn: Hatay Dörtyol"></div>
                 <div class="form-group"><label>Telefon Numarası</label><input type="tel" id="ad-biz-phone" class="form-control" placeholder="Örn: 05xxxxxxxxx"></div>
-                <div class="form-group"><label>Reklam / İşletme Açıklaması</label><textarea id="ad-biz-desc" class="form-control" rows="3" placeholder="Reklam metni veya açıklama..."></textarea></div>
-                <div class="form-group"><label>Galeriden Video veya Görsel Yükle</label><input type="file" id="ad-media-file" class="form-control" accept="image/*,video/*"></div>
+                <div class="form-group"><label>Beğeni Sayısı</label><input type="number" id="ad-biz-likes" class="form-control" value="0" placeholder="Reklam beğeni sayısı"></div>
+                <div class="form-group"><label>Reklam / İşletme Açıklaması</label><textarea id="ad-biz-desc" class="form-control" rows="6" placeholder="Görsel 1000018377.jpg içeriğindeki gibi çok uzun hikaye tarzı açıklamaları buraya serbestçe girebilirsiniz..."></textarea></div>
+                <div class="form-group"><label>Galeriden Video veya Görsel Yükle (Değiştirmek istemiyorsanız boş bırakın)</label><input type="file" id="ad-media-file" class="form-control" accept="image/*,video/*"></div>
                 
-                <button class="btn-submit" style="background:#2ecc71; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="saveSponsorAd()">Sponsorlu Reklamı Siteye Ekle</button>
+                <button class="btn-submit" style="background:#2ecc71; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="saveSponsorAd()">Sponsorlu Reklamı Güncelle / Yayınla</button>
             </div>
         </div>
     </div>
@@ -344,12 +358,10 @@
             }
         }
 
-        // Link hash değişimlerini dinle
         window.addEventListener('hashchange', checkHashRoute);
 
         // --- APPLİKASYON VE SAYFA YÖNETİM MOTORU ---
         window.switchPage = function(pageId) {
-            // Güvenlik: Giriş yapmamış birini #admin hash'i yokken admin paneline geçirmeyelim
             if (pageId === 'admin' && window.location.hash !== '#admin') {
                 pageId = 'home';
             }
@@ -357,6 +369,7 @@
             document.querySelectorAll('.main-page, .page-panel').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById('detail-page').classList.remove('active');
+            document.getElementById('ad-detail-page').classList.remove('active');
 
             const targetPage = document.getElementById(`${pageId}-page`) || document.getElementById(`${pageId}-panel`);
             if (targetPage) targetPage.classList.add('active');
@@ -370,7 +383,6 @@
             const user = document.getElementById('admin-username').value;
             const pass = document.getElementById('admin-pass').value;
 
-            // İstediğin sabit giriş bilgileri
             const requiredU = "barış kömbe";
             const requiredP = "payasdeva";
 
@@ -388,7 +400,6 @@
             sessionStorage.removeItem('enes_admin_session');
             document.getElementById('admin-login-area').style.display = "block";
             document.getElementById('admin-content-area').style.display = "none";
-            // Çıkış yapınca ana sayfaya at ve hash'i temizle
             window.location.hash = '';
             window.switchPage('home');
         };
@@ -411,7 +422,7 @@
             }
         };
 
-        // --- GÖRSEL VEYA VİDEO SIKIŞTIRMA / BASE64 SİSTEMİ ---
+        // --- BASE64 MEDYA ÇEVİRİCİ ---
         function mediaToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -436,30 +447,57 @@
             });
         }
 
-        // --- DINAMIK REKLAM YÖNETİM SİSTEMİ ---
+        // --- DÜZENLEME İÇİN AKTİF REKLAMI FORMA ÇEKME ---
+        window.loadCurrentAdToForm = function() {
+            if (!currentAdData) { alert("Sistemde yüklü aktif bir reklam bulunamadı!"); return; }
+            document.getElementById('ad-biz-name').value = currentAdData.bizName || "";
+            document.getElementById('ad-biz-address').value = currentAdData.bizAddress || "";
+            document.getElementById('ad-biz-phone').value = currentAdData.bizPhone || "";
+            document.getElementById('ad-biz-likes').value = currentAdData.likes || 0;
+            document.getElementById('ad-biz-desc').value = currentAdData.bizDesc || "";
+            alert("Mevcut reklam bilgileri forma çekildi. Düzenleyip tekrar kaydedebilirsiniz.");
+        };
+
+        // --- REKLAM KAYDETME MOTORU ---
         window.saveSponsorAd = async function() {
             const bizName = document.getElementById('ad-biz-name').value;
             const bizAddress = document.getElementById('ad-biz-address').value;
             const bizPhone = document.getElementById('ad-biz-phone').value;
             const bizDesc = document.getElementById('ad-biz-desc').value;
+            const bizLikes = parseInt(document.getElementById('ad-biz-likes').value) || 0;
             const mediaFile = document.getElementById('ad-media-file').files[0];
 
-            if (!bizName || !mediaFile) { alert("Lütfen İşletme Adı ve bir Görsel/Video seçin!"); return; }
-            alert("Medya dosyası sıkıştırılıp yükleniyor, lütfen bekleyin...");
+            if (!bizName) { alert("Lütfen İşletme Adı girin!"); return; }
+
+            let adObject = {
+                bizName: bizName, bizAddress: bizAddress, bizPhone: bizPhone, bizDesc: bizDesc,
+                views: currentAdData ? (currentAdData.views || 2457) : 2457, likes: bizLikes
+            };
+
+            // Eğer yeni bir medya dosyası seçildiyse base64'e dönüştür
+            if (mediaFile) {
+                alert("Medya dosyası işleniyor, lütfen bekleyin...");
+                const mediaResult = await mediaToBase64(mediaFile);
+                adObject.mediaType = mediaResult.type;
+                adObject.mediaData = mediaResult.data;
+            } else if (currentAdData) {
+                // Seçilmediyse eski medyasını koru
+                adObject.mediaType = currentAdData.mediaType;
+                adObject.mediaData = currentAdData.mediaData;
+            } else {
+                alert("Lütfen bir reklam görseli veya videosu yükleyin!");
+                return;
+            }
 
             try {
-                const mediaResult = await mediaToBase64(mediaFile);
-                const adObject = {
-                    bizName: bizName, bizAddress: bizAddress, bizPhone: bizPhone, bizDesc: bizDesc,
-                    mediaType: mediaResult.type, mediaData: mediaResult.data, views: 2457, likes: 0
-                };
                 await setDoc(doc(db, "sponsors", "active_ad"), adObject);
-                alert("Sponsorlu reklam başarıyla yayına alındı!");
+                alert("Sponsorlu reklam başarıyla güncellendi ve yayına alındı!");
             } catch(e) {
                 alert("Hata: " + e.message);
             }
         };
 
+        // Reklam Veritabanını İzleyen Canlı Motor
         function initSponsorAdMotor() {
             onSnapshot(doc(db, "sponsors", "active_ad"), (docSnapshot) => {
                 if (docSnapshot.exists()) {
@@ -480,20 +518,38 @@
             });
         }
 
+        // --- TRENDYOL TARZI YENİ REKLAM DETAY SAYFASI MOTORU ---
         window.handleAdClick = async function() {
             if (!currentAdData) return;
+            
+            // İzlenme sayısını arka planda 1 arttır
             const nextViews = (currentAdData.views || 2457) + 1;
             await updateDoc(doc(db, "sponsors", "active_ad"), { views: nextViews });
 
-            document.getElementById('pop-biz-name').innerText = currentAdData.bizName;
-            document.getElementById('pop-biz-desc').innerText = currentAdData.bizDesc || "Açıklama girilmedi.";
-            document.getElementById('pop-biz-address').innerText = currentAdData.bizAddress || "Adres belirtilmedi.";
-            document.getElementById('pop-biz-phone').innerText = currentAdData.bizPhone || "Telefon belirtilmedi.";
-            document.getElementById('pop-biz-call').href = `tel:${currentAdData.bizPhone}`;
-            document.getElementById('ad-detail-popup').style.display = 'flex';
+            // Ana ekranları kapatıp, yeni reklam detay sayfasını aktif et
+            document.getElementById('home-page').classList.remove('active');
+            document.getElementById('favorites-panel').classList.remove('active');
+            document.getElementById('ad-detail-page').classList.add('active');
+
+            // Bilgileri yerleştir
+            document.getElementById('ad-detail-biz-name').innerText = currentAdData.bizName;
+            document.getElementById('ad-detail-biz-desc').innerText = currentAdData.bizDesc || "Açıklama girilmedi.";
+            document.getElementById('ad-detail-biz-address').innerText = currentAdData.bizAddress || "Adres belirtilmedi.";
+            document.getElementById('ad-detail-biz-phone').innerText = currentAdData.bizPhone || "Telefon belirtilmedi.";
+            document.getElementById('ad-detail-biz-call').href = `tel:${currentAdData.bizPhone}`;
+
+            // Medyayı tam boyut bas
+            const container = document.getElementById('ad-detail-media-container');
+            container.innerHTML = currentAdData.mediaType === 'video'
+                ? `<video src="${currentAdData.mediaData}" controls autoplay loop class="detail-main-video"></video>`
+                : `<img src="${currentAdData.mediaData}" class="detail-main-img">`;
         };
 
-        window.closeAdPopup = function() { document.getElementById('ad-detail-popup').style.display = 'none'; };
+        window.closeAdDetailPage = function() {
+            document.getElementById('ad-detail-page').classList.remove('active');
+            checkHashRoute();
+        };
+
         window.likeSponsorAd = async function(e) {
             e.stopPropagation(); if (!currentAdData) return;
             await updateDoc(doc(db, "sponsors", "active_ad"), { likes: (currentAdData.likes || 0) + 1 });
@@ -564,7 +620,7 @@
             });
         }
 
-        // --- TRENDYOL TARZI DETAY SAYFASI ---
+        // --- TRENDYOL TARZI ÜRÜN DETAY SAYFASI ---
         window.openProductDetail = function(id) {
             const p = allProducts.find(prod => prod.id === id);
             if(!p) return;
@@ -572,7 +628,7 @@
             
             document.getElementById('home-page').classList.remove('active');
             document.getElementById('favorites-panel').classList.remove('active');
-            document.getElementById('detail-page').classList.add('active');
+            document.getElementById('detail-page').add('active');
 
             document.getElementById('detail-header-title').innerText = p.name;
             document.getElementById('detail-img').src = p.image || 'https://via.placeholder.com/400';
@@ -593,10 +649,9 @@
 
         window.closeProductDetail = function() {
             document.getElementById('detail-page').classList.remove('active');
-            checkHashRoute(); // Hash durumuna göre doğru sayfaya dön
+            checkHashRoute();
         };
 
-        // LIGHTBOX MOTORU
         window.openLightbox = function() {
             if(!selectedProductForDetail) return;
             document.getElementById('lightbox-img').src = selectedProductForDetail.image || 'https://via.placeholder.com/400';
@@ -604,7 +659,6 @@
         };
         window.closeLightbox = function() { document.getElementById('lightbox').classList.remove('active'); };
 
-        // --- BEĞENİ VE FAVORİ MOTORU ---
         window.likeProduct = async function(id, e) {
             e.stopPropagation();
             const p = allProducts.find(prod => prod.id === id);
@@ -765,13 +819,17 @@
 
         function updateBadges() {
             const favBadge = document.getElementById('fav-badge');
-            favBadge.innerText = favorites.length;
-            favBadge.style.display = favorites.length > 0 ? "block" : "none";
+            if(favBadge) {
+                favBadge.innerText = favorites.length;
+                favBadge.style.display = favorites.length > 0 ? "block" : "none";
+            }
 
             const cartCount = cart.reduce((acc, obj) => acc + obj.qty, 0);
             const cartBadge = document.getElementById('cart-badge');
-            cartBadge.innerText = cartCount;
-            cartBadge.style.display = cartCount > 0 ? "block" : "none";
+            if(cartBadge) {
+                cartBadge.innerText = cartCount;
+                cartBadge.style.display = cartCount > 0 ? "block" : "none";
+            }
         }
 
         // --- ADMİN ÜRÜN EKLEME / DÜZENLEME MOTORU ---
@@ -879,7 +937,7 @@
         initVisitorCounter();
         initSponsorAdMotor();
         listenProducts();
-        checkHashRoute(); // İlk açılışta hash kontrolü yap
+        checkHashRoute();
     </script>
 </body>
 </html>
