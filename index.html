@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aurea Premium</title>
+    <!-- Google Font & FontAwesome İkonları -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -85,10 +86,10 @@
 
         /* Alt Gezinme Barı (Bottom Navigation) */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #eef2f3; z-index: 200; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #7f8c8d; font-size: 11px; font-weight: 600; text-decoration: none; cursor: pointer; position: relative; width: 25%; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #7f8c8d; font-size: 11px; font-weight: 600; text-decoration: none; cursor: pointer; position: relative; width: 33.33%; }
         .nav-item.active { color: #3498db; }
         .nav-item i { font-size: 20px; margin-bottom: 2px; }
-        .badge { position: absolute; top: -5px; right: 25%; background: #e74c3c; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+        .badge { position: absolute; top: -5px; right: 30%; background: #e74c3c; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
 
         /* Modallar & Paneller */
         .page-panel, .main-page { display: none; padding: 15px; }
@@ -121,9 +122,12 @@
 </head>
 <body>
 
+    <!-- Üst Bar -->
     <header id="main-header">Aurea <span>Premium</span></header>
 
+    <!-- MÜŞTERİ ANA SAYFA PANELİ -->
     <div id="home-page" class="main-page active">
+        <!-- Ziyaretçi Sayacı Kutusu -->
         <div class="visitor-counter-box">
             <div class="visitor-info">
                 <i class="fas fa-chart-line"></i>
@@ -135,6 +139,7 @@
             <div class="visitor-count" id="live-counter">1,000,000</div>
         </div>
 
+        <!-- SPONSORLU REKLAM ALANI -->
         <div class="sponsor-container" id="sponsor-ad-container">
             <div class="sponsor-header">
                 <span id="sponsor-biz-name">İşletme Adı</span>
@@ -153,13 +158,16 @@
             </div>
         </div>
 
+        <!-- Dinamik Kategoriler -->
         <div class="categories">
             <button class="cat-btn active" onclick="filterCategory('Tümü')">Tümü</button>
             <button class="cat-btn" onclick="filterCategory('Polo yaka t-shirt')">Polo Yaka T-Shirt</button>
         </div>
+        <!-- Ürünlerin Listeleneceği Yer -->
         <div class="products-grid" id="products-container"></div>
     </div>
 
+    <!-- REKLAM DETAY POPUP MODALI -->
     <div id="ad-detail-popup" class="ad-popup">
         <div class="ad-popup-content">
             <span class="ad-popup-close" onclick="closeAdPopup()">&times;</span>
@@ -172,6 +180,7 @@
         </div>
     </div>
 
+    <!-- TRENDYOL TARZI DETAY SAYFASI PANELİ -->
     <div id="detail-page" class="product-detail-page">
         <div class="detail-header">
             <i class="fas fa-arrow-left" onclick="closeProductDetail()"></i>
@@ -202,11 +211,13 @@
         </div>
     </div>
 
+    <!-- TAM EKRAN FOTOĞRAF MODALI (LIGHTBOX) -->
     <div id="lightbox" class="lightbox-modal" onclick="closeLightbox()">
         <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
         <img class="lightbox-img" id="lightbox-img">
     </div>
 
+    <!-- SEPET PANELİ -->
     <div id="cart-panel" class="page-panel">
         <h3 style="margin-bottom: 15px;">Alışveriş Sepetim</h3>
         <div id="cart-container"></div>
@@ -216,6 +227,7 @@
             <span id="total-price-text">0.00 TL</span>
         </div>
         
+        <!-- Sipariş Formu -->
         <div id="checkout-form" style="display: none;">
             <h4 style="margin-bottom: 10px; color: #3498db;">Teslimat Bilgileri</h4>
             <div class="form-group"><label>Ad Soyad</label><input type="text" id="cust-name" class="form-control" placeholder="Adınız ve soyadınız"></div>
@@ -226,27 +238,30 @@
         <button id="btn-show-checkout" class="btn-submit" style="background:#3498db; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="showCheckoutForm()">Ödeme Yap</button>
     </div>
 
+    <!-- FAVORİLER PANELİ -->
     <div id="favorites-panel" class="page-panel">
         <h3 style="margin-bottom: 15px;">Favori Ürünlerim</h3>
         <div class="products-grid" id="favorites-container"></div>
     </div>
 
+    <!-- SATICI PANELİ (GİZLİ PANEL) -->
     <div id="admin-panel" class="page-panel">
         <div id="admin-login-area">
-            <h3 style="margin-bottom: 15px;">Satıcı Girişi</h3>
-            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="admin-username" class="form-control" placeholder="Örn: enesdeva"></div>
-            <div class="form-group"><label>Şifre</label><input type="password" id="admin-pass" class="form-control" placeholder="Şifreniz"></div>
+            <h3 style="margin-bottom: 15px;">Yönetici Girişi</h3>
+            <div class="form-group"><label>Kullanıcı Adı</label><input type="text" id="admin-username" class="form-control" placeholder="Kullanıcı Adı"></div>
+            <div class="form-group"><label>Şifre</label><input type="password" id="admin-pass" class="form-control" placeholder="Şifre"></div>
             <button class="btn-submit" style="background:#3498db; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="handleAdminLogin()">Giriş Yap</button>
-            <button class="btn-submit" id="btn-admin-register" style="background:#2ecc71; margin-top: 5px; border:none; width:100%; padding:12px; color:#fff; font-weight:bold; border-radius:8px; cursor:pointer;" onclick="handleAdminRegister()">Tek Seferlik Yönetici Kaydı Oluştur</button>
         </div>
 
         <div id="admin-content-area" style="display: none;">
+            <!-- SEKMELİ YAPI -->
             <div style="display:flex; gap:10px; margin-bottom:15px; border-bottom:2px solid #eef2f3; padding-bottom:10px;">
                 <button onclick="switchAdminTab('product')" id="tab-btn-product" style="flex:1; padding:8px; border:none; background:#3498db; color:#fff; border-radius:6px; font-weight:bold; cursor:pointer;">Ürün Yönetimi</button>
                 <button onclick="switchAdminTab('ad')" id="tab-btn-ad" style="flex:1; padding:8px; border:none; background:#eef2f3; color:#333; border-radius:6px; font-weight:bold; cursor:pointer;">Sponsorluk Ekle</button>
                 <button onclick="handleAdminLogout()" style="background: #e74c3c; color:#fff; border:none; padding:5px 10px; border-radius:6px; font-size:12px; font-weight:bold; cursor:pointer;">Çıkış</button>
             </div>
 
+            <!-- ÜRÜN EKLEME BÖLÜMÜ -->
             <div id="admin-product-sec">
                 <h3 id="admin-title" style="margin-bottom:10px;">Yeni Ürün Ekle</h3>
                 <input type="hidden" id="edit-product-id">
@@ -275,6 +290,7 @@
                 <div id="admin-products-list"></div>
             </div>
 
+            <!-- REKLAM EKLEME BÖLÜMÜ -->
             <div id="admin-ad-sec" style="display:none;">
                 <h3 style="margin-bottom:10px;">Sponsorlu Reklam Alanı Ayarları</h3>
                 <div class="form-group"><label>İşletme İsmi</label><input type="text" id="ad-biz-name" class="form-control" placeholder="Örn: Salon Hidayet"></div>
@@ -288,13 +304,14 @@
         </div>
     </div>
 
+    <!-- Alt Gezinme Barı (Nav) -->
     <div class="bottom-nav" id="bottom-navigation-bar">
         <div class="nav-item active" id="nav-home" onclick="switchPage('home')"><i class="fas fa-store"></i>Mağaza</div>
         <div class="nav-item" id="nav-favorites" onclick="switchPage('favorites')"><i class="fas fa-heart"></i>Favorilerim<span class="badge" id="fav-badge" style="display:none;">0</span></div>
         <div class="nav-item" id="nav-cart" onclick="switchPage('cart')"><i class="fas fa-shopping-basket"></i>Sepetim<span class="badge" id="cart-badge" style="display:none;">0</span></div>
-        <div class="nav-item" id="nav-admin" onclick="switchPage('admin')"><i class="fas fa-user-shield"></i>Yönetici</div>
     </div>
 
+    <!-- FIREBASE & CORE PROSES MOTORLARI -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, updateDoc, onSnapshot, query, where, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -318,35 +335,46 @@
         let selectedProductForDetail = null;
         let currentAdData = null;
 
+        // --- URL #ADMIN KONTROL MOTORU ---
+        function checkHashRoute() {
+            if (window.location.hash === '#admin') {
+                window.switchPage('admin');
+            } else {
+                window.switchPage('home');
+            }
+        }
+
+        // Link hash değişimlerini dinle
+        window.addEventListener('hashchange', checkHashRoute);
+
         // --- APPLİKASYON VE SAYFA YÖNETİM MOTORU ---
         window.switchPage = function(pageId) {
+            // Güvenlik: Giriş yapmamış birini #admin hash'i yokken admin paneline geçirmeyelim
+            if (pageId === 'admin' && window.location.hash !== '#admin') {
+                pageId = 'home';
+            }
+
             document.querySelectorAll('.main-page, .page-panel').forEach(page => page.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
             document.getElementById('detail-page').classList.remove('active');
 
             const targetPage = document.getElementById(`${pageId}-page`) || document.getElementById(`${pageId}-panel`);
             if (targetPage) targetPage.classList.add('active');
+            
             const targetNav = document.getElementById(`nav-${pageId}`);
             if (targetNav) targetNav.classList.add('active');
         };
 
-        // --- ADMİN PANELİ KİMLİK DOĞRULAMA SİSTEMLERİ ---
-        window.handleAdminRegister = function() {
-            const user = document.getElementById('admin-username').value;
-            const pass = document.getElementById('admin-pass').value;
-            if(!user || !pass) { alert("Lütfen kullanıcı adı ve şifre girin!"); return; }
-            localStorage.setItem('dev_adm_u', user);
-            localStorage.setItem('dev_adm_p', pass);
-            alert("Yönetici kaydı bu tarayıcıya yapıldı! Giriş yapabilirsiniz.");
-        };
-
+        // --- GÜVENLİ VE SABİT ADMİN LOGİN SİSTEMİ ---
         window.handleAdminLogin = function() {
             const user = document.getElementById('admin-username').value;
             const pass = document.getElementById('admin-pass').value;
-            const savedU = localStorage.getItem('dev_adm_u') || "enesdeva";
-            const savedP = localStorage.getItem('dev_adm_p') || "123456";
 
-            if(user === savedU && pass === savedP) {
+            // İstediğin sabit giriş bilgileri
+            const requiredU = "barış kömbe";
+            const requiredP = "payasdeva";
+
+            if(user === requiredU && pass === requiredP) {
                 document.getElementById('admin-login-area').style.display = "none";
                 document.getElementById('admin-content-area').style.display = "block";
                 sessionStorage.setItem('enes_admin_session', 'true');
@@ -360,6 +388,9 @@
             sessionStorage.removeItem('enes_admin_session');
             document.getElementById('admin-login-area').style.display = "block";
             document.getElementById('admin-content-area').style.display = "none";
+            // Çıkış yapınca ana sayfaya at ve hash'i temizle
+            window.location.hash = '';
+            window.switchPage('home');
         };
 
         window.switchAdminTab = function(tab) {
@@ -562,7 +593,7 @@
 
         window.closeProductDetail = function() {
             document.getElementById('detail-page').classList.remove('active');
-            window.switchPage('home');
+            checkHashRoute(); // Hash durumuna göre doğru sayfaya dön
         };
 
         // LIGHTBOX MOTORU
@@ -722,7 +753,6 @@
 
             message += `\n*Genel Toplam Tutar:* ${total.toFixed(2)} TL`;
             
-            // Siparişi gönderdikten sonra sepeti temizle
             cart = [];
             localStorage.removeItem('enes_deva_cart');
             updateBadges();
@@ -849,6 +879,7 @@
         initVisitorCounter();
         initSponsorAdMotor();
         listenProducts();
+        checkHashRoute(); // İlk açılışta hash kontrolü yap
     </script>
 </body>
 </html>
